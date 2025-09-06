@@ -3,24 +3,24 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Outcome Engineering Maturity – Mixed Evidence Auto-Scoring</title>
+<title>Outcome Engineering Maturity – Sequenced, Purposeful Auto-Scoring</title>
 <style>
   :root{
     --bg:#0f1220;--panel:#14182b;--muted:#9aa4b2;--text:#f7f9ff;
     --brand:#7c5cff;--brand-2:#2dd4bf;--red:#ff6b6b;--amber:#fbbf24;--green:#22c55e;
-    --line:#1e2540;--chip:#23294b;
+    --line:#1e2540;--chip:#23294b;--overlay:#0b0f22cc;
   }
   *{box-sizing:border-box}
   body{margin:0;font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--text);
     background:radial-gradient(60rem 60rem at 10% -10%,#1a1f36,#0b0e19 70%),var(--bg)}
-  header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,rgba(14,17,30,.9),rgba(14,17,30,.6)),rgba(14,17,30,.6);
+  header{position:sticky;top:0;z-index:8;background:linear-gradient(180deg,rgba(14,17,30,.9),rgba(14,17,30,.6)),rgba(14,17,30,.6);
     backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
   .wrap{max-width:1200px;margin:0 auto;padding:18px 20px}
   .brand{display:flex;gap:12px;align-items:center}
   .logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 180deg,var(--brand),var(--brand-2));box-shadow:0 0 0 3px #ffffff0a}
   h1{margin:0;font-size:20px}
   .sub{color:var(--muted);font-size:13px}
-  main{max-width:1200px;margin:18px auto;padding:0 20px 60px}
+  main{max-width:1200px;margin:18px auto;padding:0 20px 80px}
   .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.03)}
   .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
   .seg{display:inline-flex;padding:4px;background:var(--chip);border-radius:12px;border:1px solid var(--line)}
@@ -30,14 +30,21 @@
   .btn.primary{background:var(--brand);border-color:#5f46d9}
   .btn.warn{background:var(--amber);border-color:#946200;color:#111}
   .grid{display:grid;gap:14px}
-  @media (min-width:1024px){ .grid-cols-3{grid-template-columns:1.25fr .75fr} }
+  @media (min-width:1100px){ .grid-cols-3{grid-template-columns:1.15fr .85fr} }
   .pill{display:inline-flex;gap:8px;align-items:center;padding:4px 10px;background:var(--chip);border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:12px}
   .muted{color:var(--muted)}
   .h2{font-size:18px;margin:0 0 8px}
   .h3{font-size:16px;margin:16px 0 4px}
   .pillar-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:rgba(255,255,255,.02)}
   .item{border:1px dashed #2b335a;border-radius:12px;padding:12px;background:rgba(255,255,255,.02);margin-top:10px}
-  .item header{display:flex;justify-content:space-between;align-items:center}
+  .item header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .titleWrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .icons{display:flex;gap:6px;align-items:center}
+  .ico{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:7px;
+    background:#1a2040;border:1px solid var(--line);color:#cfe;cursor:pointer;font-size:12px}
+  .ico.star{color:#ffd76b;background:#2b230f;border-color:#6b5514}
+  .ico.chain{color:#9fd7ff}
+  .ico.info{color:#d1c7ff}
   .score-badge{padding:2px 8px;border-radius:999px;font-weight:700;font-size:12px;border:1px solid var(--line)}
   .score-good{background:#0f2f1b;color:#7ef39a;border-color:#135d34}
   .score-warn{background:#2f2a0f;color:#ffd977;border-color:#6b5514}
@@ -53,6 +60,16 @@
   .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
   .kpi{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.02)}
   .kpi strong{font-size:18px}
+  .tierTag{background:#1b2a14;border:1px solid #25421b;color:#9fe18c;padding:2px 8px;border-radius:999px;font-size:11px}
+  .deck{display:grid;gap:12px}
+  /* modal */
+  .overlay{position:fixed;inset:0;background:var(--overlay);display:none;z-index:20;align-items:center;justify-content:center;padding:20px}
+  .modal{max-width:720px;width:100%;background:#0f142b;border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 60px #0009}
+  .modal header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .modal .content{padding:16px;max-height:70vh;overflow:auto}
+  .x{cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:#1b2040}
+  .bul{margin:8px 0 0 16px;color:#cfe}
+  .bul li{margin:4px 0}
 </style>
 </head>
 <body>
@@ -60,8 +77,8 @@
   <div class="wrap brand">
     <div class="logo" aria-hidden="true"></div>
     <div>
-      <h1>Outcome Engineering Maturity – Mixed Evidence Auto-Scoring</h1>
-      <div class="sub">Checkboxes + Scales • Variable weights • N/A normalization • Gates & Caps</div>
+      <h1>Outcome Engineering Maturity – Sequenced, Purposeful Auto-Scoring</h1>
+      <div class="sub">Checkbox + Scales with purpose • Tiers (low→high) • Icons: ★ popular, ⛓️ depends, ⓘ info</div>
     </div>
   </div>
 </header>
@@ -69,9 +86,13 @@
 <main class="grid grid-cols-3">
   <section class="card">
     <div class="toolbar">
-      <div class="seg" role="tablist">
+      <div class="seg" role="tablist" aria-label="Module selector">
         <button id="btnCore" class="active" aria-selected="true">Core 24</button>
         <button id="btnFull" aria-selected="false">Full 12 Pillars</button>
+      </div>
+      <div class="seg" role="tablist" aria-label="View selector">
+        <button id="btnViewPillar" class="active" aria-selected="true">By Pillar</button>
+        <button id="btnViewTier" aria-selected="false">By Tier</button>
       </div>
       <button class="btn primary" id="btnCompute">Compute</button>
       <button class="btn" id="btnSave">Save</button>
@@ -80,14 +101,9 @@
       <button class="btn" id="btnExport">Export JSON</button>
     </div>
 
-    <div class="section">
-      <h2 class="h2">How scoring works</h2>
-      <div class="tiny">
-        Each sub-item contributes with its own <b>weight</b>. Types:
-        <span class="chip">check</span> = 0/1, <span class="chip">scale (0–5)</span> = value/5, <span class="chip">percent (0–100%)</span> = value/100.
-        <br/>Parameter compliance = Σ(weight × value) / Σ(weights of non-N/A items).
-        We map the parameter index to scale 1–5 via a non-linear curve (0–25→1..2, 25–50→2..3, 50–80→3..4, 80–100→4..5).
-      </div>
+    <div class="section tiny">
+      <b>Scales carry purpose:</b> click ⓘ to see why a measure exists & anchor definitions (e.g., P95 lead time 0=≥20d … 5=≤1d).
+      <br/>Index→Scale: 0–25→1..2, 25–50→2..3, 50–80→3..4, 80–100→4..5. Gates & caps apply after weighting.
     </div>
 
     <div id="formArea" class="section"></div>
@@ -104,23 +120,137 @@
 
     <div class="section">
       <h3 class="h3">Gate & cap diagnostics</h3>
-      <div id="gateList" class="grid"></div>
+      <div id="gateList" class="deck"></div>
     </div>
 
     <div class="section">
-      <h3 class="h3">Pillar breakdown</h3>
-      <div id="pillarBreakdown" class="grid"></div>
+      <h3 class="h3">Breakdown</h3>
+      <div id="pillarBreakdown" class="deck"></div>
     </div>
   </aside>
 </main>
 
-<footer>v2.0 • Mixed input types, variable weights, N/A & auto-normalization • LocalStorage only</footer>
+<!-- Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <header><strong id="modalTitle">Details</strong><button class="x" id="modalClose">Close</button></header>
+    <div class="content" id="modalContent"></div>
+  </div>
+</div>
+
+<footer class="wrap muted" style="text-align:center;margin-top:30px">v3.0 — Sequenced tiers • Purposeful scales • Icons & popovers • LocalStorage only</footer>
 
 <script>
-/* ========================= MODEL ========================= */
-/* NOTE: weights now vary; some sub-items are scales.
-   If a check has no explicit weight profile (legacy = all 12.5),
-   we auto-apply a tapered profile so items aren’t equal. */
+/* SCALE CATALOG — purpose + anchors */
+const SCALE_CATALOG = {
+  p95_lead_time: {
+    label:"P95 Lead Time", purpose:"Shorten idea→production to tighten feedback loops.",
+    anchors:["0 = ≥20 days","1 = ~15 days","2 = ~10 days","3 = ~5 days","4 = ~2 days","5 = ≤1 day"]
+  },
+  deploy_frequency: {
+    label:"Deployment Frequency", purpose:"Increase safe delivery cadence to reduce batch size.",
+    anchors:["0 = Monthly","1 = Bi-weekly","2 = Weekly","3 = 2–3×/week","4 = Daily","5 = Hourly"]
+  },
+  change_failure_rate: {
+    label:"Change Failure Rate", purpose:"Ship safely by reducing incidents per deployment.",
+    anchors:["0 = ≥40%","2 = ~25%","3 = ~15%","4 = ~8%","5 = ≤5% (↑ is better)"]
+  },
+  ci_feedback_time: {
+    label:"CI Feedback Time", purpose:"Tighten developer loop to enable small, frequent changes.",
+    anchors:["0 = ≥60m","1 = 45m","2 = 30m","3 = 20m","4 = 15m","5 = ≤10m"]
+  },
+  mttr_scale: {
+    label:"MTTR", purpose:"Recover fast to protect user outcomes & error budgets.",
+    anchors:["0 = ≥2 days","2 = ~8h","3 = ~2h","4 = ~45m","5 = ≤15m"]
+  },
+  slo_coverage_pct: {
+    label:"SLO Coverage %", purpose:"Ensure reliability is defined where it matters.",
+    anchors:["0–100% of services with SLOs"]
+  },
+  lineage_coverage_pct: {
+    label:"Outcome Lineage %", purpose:"Trace PR→Feature→Event→KPI to attribute impact.",
+    anchors:["0–100% merged PRs with lineage"]
+  },
+  eng_cust_hours: {
+    label:"Engineer–Customer Hours", purpose:"Bring engineers closer to users to reduce rework.",
+    anchors:["0 = 0h/qtr","1 = 1h","2 = 2h","3 = 4h","4 = 6h","5 = ≥8h per engineer/quarter"]
+  },
+  tagging_coverage_pct: {
+    label:"Tagging Coverage %", purpose:"Expose cost-to-serve for financial decisions.",
+    anchors:["0–100% resources correctly tagged"]
+  }
+};
+
+/* TIER / META — sequence, popularity, dependencies, purpose */
+const PARAM_META = {
+  /* Tier 1 – Foundations */
+  "eng.test_strategy":{tier:1,popular:true,purpose:"Fast, trustworthy feedback at unit→e2e levels.",dependsOn:[]},
+  "eng.code_review_gates":{tier:1,purpose:"Consistent code/security gates via PRs.",dependsOn:[]},
+  "docs.code_api_docs":{tier:1,purpose:"Docs-as-code; discoverable & fresh.",dependsOn:[]},
+  "org.role_triad":{tier:1,purpose:"Clear EM/PM/Design decision rights.",dependsOn:[]},
+  "cust.kpi_literacy":{tier:1,purpose:"Teams read & act on KPIs; shared vocabulary.",dependsOn:[]},
+
+  /* Tier 2 – Flow basics */
+  "deliv.lead_time":{tier:2,popular:true,purpose:"Shorten change lead time; primary flow signal.",dependsOn:["eng.test_strategy","eng.code_review_gates","eng.dev_workflow"]},
+  "deliv.flow_efficiency":{tier:2,purpose:"Visualise queues; reduce wait vs work.",dependsOn:["deliv.lead_time"]},
+  "eng.dev_workflow":{tier:2,purpose:"Reproducible local/cloud dev; fast bootstraps.",dependsOn:[]},
+  "eng.cicd":{tier:2,popular:true,purpose:"Automated build/test/deploy; ship often & safely.",dependsOn:["eng.test_strategy","eng.dev_workflow"]},
+  "arch.modularity":{tier:2,purpose:"Right-sized modules/services to limit blast radius.",dependsOn:[]},
+
+  /* Tier 3 – Release & reliability */
+  "deliv.release_safety":{tier:3,popular:true,purpose:"Progressive delivery, flags, rollback.",dependsOn:["eng.cicd"]},
+  "reliab.incident_mgmt":{tier:3,purpose:"Coordinated response; RCAs & drills.",dependsOn:["arch.obs_by_design"]},
+  "reliab.mttr_budget":{tier:3,popular:true,purpose:"Error budgets policies + MTTR tracking.",dependsOn:["arch.obs_by_design","reliab.incident_mgmt"]},
+  "arch.obs_by_design":{tier:3,popular:true,purpose:"Golden signals, tracing & runbooks.",dependsOn:[]},
+
+  /* Tier 4 – Product outcome wiring */
+  "cust.proximity":{tier:4,popular:true,purpose:"Engineers meet users; evidence flows in.",dependsOn:[]},
+  "cust.outcome_trace":{tier:4,popular:true,purpose:"PR→Feature→Event→KPI lineage for attribution.",dependsOn:["data.data_sla_lineage"]},
+  "reliab.slos_product":{tier:4,popular:true,purpose:"Product-relevant SLOs & budget policy.",dependsOn:["arch.obs_by_design"]},
+  "prod.discovery":{tier:4,purpose:"Derisk bets via experiments & guardrails.",dependsOn:["cust.problem_framing"]},
+  "cust.problem_framing":{tier:4,purpose:"Evidence-first problem statements.",dependsOn:[]},
+
+  /* Tier 5 – Economics & data */
+  "econ.cost_to_serve":{tier:5,popular:true,purpose:"Cost per request/segment drives choices.",dependsOn:["eng.iac_gitops","eng.cloud_enable"]},
+  "econ.squad_budget":{tier:5,purpose:"Local budget ownership & reallocation.",dependsOn:["econ.cost_to_serve"]},
+  "data.data_sla_lineage":{tier:5,purpose:"Data contracts, lineage & quality SLAs.",dependsOn:[]},
+  "arch.api_product":{tier:5,purpose:"API as product: SLAs, adoption, analytics.",dependsOn:["arch.modularity"]},
+
+  /* Tier 6 – Enterprise excellence */
+  "prod.gtm_readiness":{tier:6,purpose:"Enablement, support & rollback plans.",dependsOn:["deliv.release_safety"]},
+  "econ.finops":{tier:6,purpose:"Policy-driven cloud savings & forecasts.",dependsOn:["econ.cost_to_serve","eng.iac_gitops"]},
+  "data.model_lifecycle":{tier:6,purpose:"Drift monitors, rollback, cadence.",dependsOn:["data.data_sla_lineage"]},
+  "data.responsible_ai":{tier:6,purpose:"Fairness, HITL, auditability.",dependsOn:["data.model_lifecycle"]},
+  "xp.perf_budgets_rum":{tier:6,popular:true,purpose:"Perceived perf tied to KPIs.",dependsOn:["eng.cicd"]},
+  "xp.accessibility":{tier:6,purpose:"Inclusive usage (WCAG).",dependsOn:[]},
+  "xp.i18n_l10n":{tier:6,purpose:"Global readiness.",dependsOn:[]},
+  "xp.support_integration":{tier:6,purpose:"Close loop with Customer Support.",dependsOn:[]},
+  "strat.okr_link":{tier:6,popular:true,purpose:"Connect strategy→OKRs→metrics; governance.",dependsOn:["cust.kpi_literacy"]},
+  "strat.portfolio_review":{tier:6,purpose:"Evidence-based allocation/kill.",dependsOn:["cust.outcome_trace","reliab.slos_product"]},
+  "strat.exec_narrative":{tier:6,purpose:"Single story across customer, tech, finance.",dependsOn:[]},
+  "strat.decision_reversible":{tier:6,purpose:"Fast, reversible decisions.",dependsOn:["docs.adrs_quality"]},
+  "deliv.planning_adapt":{tier:6,purpose:"Metrics-driven replanning cadence.",dependsOn:["strat.okr_link"]},
+  "arch.evolutionary":{tier:6,purpose:"Fitness functions in CI; guided change.",dependsOn:["eng.test_strategy","eng.cicd"]},
+  "eng.iac_gitops":{tier:6,purpose:"Infra as code; drift & policy control.",dependsOn:[]},
+  "eng.cloud_enable":{tier:6,purpose:"Paved paths, managed services, guardrails.",dependsOn:[]},
+  "reliab.anomaly":{tier:6,purpose:"Change-aware alerting, fatigue control.",dependsOn:["arch.obs_by_design"]},
+  "sec.secure_coding":{tier:6,popular:true,purpose:"Supply chain & code security.",dependsOn:["eng.cicd"]},
+  "sec.privacy_data":{tier:6,purpose:"Lawful, safe data usage.",dependsOn:["data.data_sla_lineage"]},
+  "sec.compliance_evidence":{tier:6,purpose:"Evidence-as-code, audit-ready.",dependsOn:["eng.cicd"]},
+  "sec.runtime_ir":{tier:6,purpose:"Detect/contain/respond.",dependsOn:["reliab.incident_mgmt"]},
+  "docs.knowledge_onboarding":{tier:6,purpose:"Reduce time-to-first-PR.",dependsOn:["docs.code_api_docs"]},
+  "docs.adrs_quality":{tier:6,popular:true,purpose:"Decision quality, reversals & traceability.",dependsOn:[]},
+  "docs.audit_trace":{tier:6,purpose:"End-to-end accountability.",dependsOn:[]},
+  "org.team_autonomy":{tier:6,purpose:"Own problem→ops within guardrails.",dependsOn:["org.role_triad"]},
+  "org.growth_calibration":{tier:6,purpose:"Fair, evidence-based growth.",dependsOn:[]},
+  "org.leadership_behaviour":{tier:6,purpose:"Unblockers; outcome-first leadership.",dependsOn:[]},
+  "econ.pricing_levers":{tier:6,purpose:"Telemetry-informed pricing tests.",dependsOn:["data.analytics_selfserve"]},
+  "prod.prioritisation":{tier:6,purpose:"Value/risk sequencing tied to OKRs.",dependsOn:["cust.problem_framing"]},
+  "prod.roadmapping":{tier:6,purpose:"Outcome-based, scenario-aware plans.",dependsOn:["strat.okr_link"]},
+  "data.analytics_selfserve":{tier:6,purpose:"Speed to insight; self-serve.",dependsOn:["data.data_sla_lineage"]}
+};
+
+/* MODEL (weights, gates, caps, parameters) */
 const MODEL = {
   weights: {
     "Strategy & Executive Alignment": 8,
@@ -139,10 +269,10 @@ const MODEL = {
   gates: [
     { id:"G1", label:"Outcome traceability ≥ 4", params:["cust.outcome_trace"], logical:"AND", threshold:4.0 },
     { id:"G2", label:"Lead time ≥ 4 AND Release safety ≥ 4", params:["deliv.lead_time","deliv.release_safety"], logical:"AND", threshold:4.0 },
-    { id:"G3", label:"SLO ownership and MTTR ≥ 4", params:["reliab.slos_product","reliab.mttr_budget"], logical:"AND", threshold:4.0 },
+    { id:"G3", label:"SLOs & MTTR ≥ 4", params:["reliab.slos_product","reliab.mttr_budget"], logical:"AND", threshold:4.0 },
     { id:"G4", label:"Customer proximity & KPI literacy ≥ 4", params:["cust.proximity","cust.kpi_literacy"], logical:"AND", threshold:4.0 },
-    { id:"G5", label:"Strategy → OKR linkage ≥ 3.5", params:["strat.okr_link"], logical:"AND", threshold:3.5 },
-    { id:"G6", label:"Cost to serve & Squad budget ≥ 3.5", params:["econ.cost_to_serve","econ.squad_budget"], logical:"AND", threshold:3.5 }
+    { id:"G5", label:"Strategy→OKR ≥ 3.5", params:["strat.okr_link"], logical:"AND", threshold:3.5 },
+    { id:"G6", label:"Cost-to-serve & Squad budget ≥ 3.5", params:["econ.cost_to_serve","econ.squad_budget"], logical:"AND", threshold:3.5 }
   ],
   caps: [
     { label:"Cap 2.4 if Lead time < 3 or Release < 3", params:["deliv.lead_time","deliv.release_safety"], logic:"OR", cap:2.4, lt:3.0 },
@@ -176,20 +306,16 @@ const MODEL = {
       { name:"Data & AI Lifecycle", parameters:["data.data_sla_lineage","data.model_lifecycle","data.responsible_ai","data.analytics_selfserve"] },
       { name:"Experience Quality & Market Readiness", parameters:["xp.perf_budgets_rum","xp.accessibility","xp.i18n_l10n","xp.support_integration"] }
     ],
-    /* PARAMETER DEFINITIONS
-       - type: "check" | "scale5" | "scale100"
-       - w: weight (0..100, will be normalized if totals ≠100 or items marked N/A)
-       If some items lack explicit w, we apply tapered defaults to avoid equal weights. */
     parameters: {
-      /* ---- a few examples updated with mixed types & varied weights ---- */
+      /* explicit mixed examples */
       "deliv.lead_time": { label:"Lead time for change", checks:[
-        {type:"check",  w:18, label:"DORA/VCS export available (last 90 days)"},
-        {type:"scale5", w:22, label:"P95 lead time (0=weeks, 5=≤1 day)", help:"0=≥20d, 2=~10d, 3=~5d, 4=~2d, 5=≤1d"},
-        {type:"check",  w:14, label:"WIP limits enforced on boards"},
-        {type:"check",  w:12, label:"Blocker ageing alerts (bot)"},
-        {type:"check",  w:10, label:"Small PR policy in place"},
+        {type:"check",  w:18, label:"DORA/VCS export available (90d)"},
+        {type:"scale5", w:22, label:"P95 lead time", scaleRef:"p95_lead_time", purpose:"Lower time ⇒ faster learning cycles."},
+        {type:"check",  w:14, label:"WIP limits enforced"},
+        {type:"check",  w:12, label:"Blocker ageing alerts"},
+        {type:"check",  w:10, label:"Small PR policy"},
         {type:"check",  w:8,  label:"Pair/mob or PR-buddy rotation"},
-        {type:"check",  w:8,  label:"Trunk-based/short-lived branches"},
+        {type:"check",  w:8,  label:"Trunk-based or short-lived branches"},
         {type:"check",  w:8,  label:"Weekly review of slowest 10% PRs"}
       ]},
       "eng.test_strategy": { label:"Test strategy", checks:[
@@ -198,31 +324,31 @@ const MODEL = {
         {type:"check",  w:12, label:"Contract tests between services"},
         {type:"check",  w:10, label:"Test data mgmt (synthetic/anonymised)"},
         {type:"check",  w:10, label:"Flake tracking & quarantine"},
-        {type:"check",  w:10, label:"Performance tests on critical paths"},
-        {type:"check",  w:8,  label:"AI-assisted or mutation testing used"},
-        {type:"scale5", w:16, label:"Median CI feedback time (0=60m+, 5=≤10m)", help:"0=≥60m,1=~45m,2=~30m,3=~20m,4=~15m,5=≤10m"}
+        {type:"check",  w:10, label:"Performance tests for critical paths"},
+        {type:"check",  w:8,  label:"AI-assisted/mutation testing used"},
+        {type:"scale5", w:16, label:"Median CI feedback time", scaleRef:"ci_feedback_time", purpose:"Tight loop enables small batches."}
       ]},
       "reliab.mttr_budget": { label:"MTTR & error budgets", checks:[
         {type:"check",  w:16, label:"Error budgets defined per service"},
         {type:"check",  w:14, label:"Budget burn dashboard live"},
         {type:"check",  w:12, label:"Budget policy (throttle/gate) documented"},
         {type:"check",  w:14, label:"≥2 policy activations last quarter"},
-        {type:"scale5", w:22, label:"Incident MTTR (0=days, 5=≤15m)", help:"0=≥2d,2=~8h,3=~2h,4=~45m,5=≤15m"},
+        {type:"scale5", w:22, label:"Incident MTTR", scaleRef:"mttr_scale", purpose:"Faster recovery protects outcomes."},
         {type:"check",  w:8,  label:"Auto-page/auto-ticket wired"},
         {type:"check",  w:8,  label:"Budget breaches reviewed in planning"},
-        {type:"check",  w:6,  label:"Playbooks link to budget view"}
+        {type:"check",  w:6,  label:"Incident playbooks link to budget view"}
       ]},
       "reliab.slos_product": { label:"SLOs & product impact", checks:[
         {type:"check",   w:16, label:"SLOs defined (latency/errors/availability)"},
         {type:"check",   w:14, label:"SLOs declared in code/config"},
-        {type:"check",   w:14, label:"Error budget ties to release gating"},
-        {type:"check",   w:12, label:"Customer impact quantified (revenue at risk)"},
+        {type:"check",   w:14, label:"Error budget tied to release gating"},
+        {type:"check",   w:12, label:"Customer impact quantified (rev at risk)"},
         {type:"check",   w:10, label:"Runbooks link from SLO alerts"},
         {type:"check",   w:10, label:"SLO reviews in PM & on-call rituals"},
-        {type:"scale100",w:24, label:"SLO coverage (%) across services", help:"Set % coverage (0–100)"}
+        {type:"scale100",w:24, label:"SLO coverage %", scaleRef:"slo_coverage_pct", purpose:"Wider coverage ⇒ reliability by design."}
       ]},
       "cust.proximity": { label:"Customer proximity", checks:[
-        {type:"scale5",  w:28, label:"Engineer–customer hours/pp/quarter (0=0h, 5=≥8h)"},
+        {type:"scale5",  w:28, label:"Engineer–customer hours", scaleRef:"eng_cust_hours", purpose:"Direct exposure prevents rework."},
         {type:"check",   w:16, label:"Engineers join discovery/shadow sessions"},
         {type:"check",   w:12, label:"Notes linked to backlog items"},
         {type:"check",   w:12, label:"Quarterly pipeline of sessions planned"},
@@ -237,7 +363,7 @@ const MODEL = {
         {type:"check",   w:12, label:"Flag/experiment ID linked to PR"},
         {type:"check",   w:12, label:"KPI chart linked in PR/ticket"},
         {type:"check",   w:12, label:"Automated lineage view exists"},
-        {type:"scale100",w:22, label:"Lineage coverage (%) last 90 days", help:"% merged PRs with lineage"},
+        {type:"scale100",w:22, label:"Lineage coverage % (90d)", scaleRef:"lineage_coverage_pct", purpose:"Attribution coverage."},
         {type:"check",   w:7,  label:"Attribution notes: expected vs actual delta"},
         {type:"check",   w:5,  label:"Event data quality checks & alerts"}
       ]},
@@ -248,22 +374,23 @@ const MODEL = {
         {type:"check",  w:12, label:"Feature flags supported"},
         {type:"check",  w:10, label:"Canary/blue-green available"},
         {type:"check",  w:10, label:"Automated rollback hook"},
-        {type:"scale5", w:12, label:"Deployment frequency (0=monthly, 5=hourly)"},
-        {type:"scale5", w:10, label:"Change failure rate (5=≤5%)", help:"Invert: 0=≥40%, 2=~25%, 3=~15%, 4=~8%, 5=≤5%"}
+        {type:"scale5", w:12, label:"Deployment frequency", scaleRef:"deploy_frequency", purpose:"Smaller batches, lower risk."},
+        {type:"scale5", w:10, label:"Change failure rate (↓ better)", scaleRef:"change_failure_rate", purpose:"Safety of delivery."}
       ]},
       "econ.cost_to_serve": { label:"Cost-to-serve visibility", checks:[
         {type:"check",   w:18, label:"Tagging standards implemented"},
         {type:"check",   w:14, label:"Dashboard: cost per request/segment"},
         {type:"check",   w:12, label:"Allocation method documented"},
-        {type:"check",   w:12, label:"Trends vs SLO compliance"},
+        {type:"check",   w:12, label:"Trends vs SLO compliance visible"},
         {type:"check",   w:10, label:"Alerts on anomaly spikes"},
-        {type:"check",   w:10, label:"Monthly review in squad & product"},
-        {type:"scale100",w:14, label:"Tagging coverage (%)", help:"% resources with correct tags"},
+        {type:"check",   w:10, label:"Monthly review in squad & product forums"},
+        {type:"scale100",w:14, label:"Tagging coverage %", scaleRef:"tagging_coverage_pct", purpose:"Transparency of spend."},
         {type:"check",   w:10, label:"Accuracy spot-checks performed"}
       ]},
-      /* ---- the rest reuse the prior lists; types/weights will be auto-profiled ---- */
+
+      /* remaining parameters (weights auto-profiled) */
       "strat.okr_link": { label:"Strategy → OKR linkage", checks:[
-        {label:"Strategy tree documented, versioned, published"},
+        {label:"Strategy tree documented & versioned"},
         {label:"≥80% squads have OKRs with owners & dates"},
         {label:"OKR quality rubric ≥ 3/5 per squad"},
         {label:"Quarterly OKR reviews with minutes"},
@@ -282,6 +409,100 @@ const MODEL = {
         {label:"Scenario analysis for top bets"},
         {label:"Portfolio dashboard org-visible"}
       ]},
+      "strat.exec_narrative": { label:"Executive single narrative", checks:[
+        {label:"Narrative links customer/tech/finance"},
+        {label:"Versioned & refreshed quarterly"},
+        {label:"Referenced in exec reviews/QBRs"},
+        {label:"KPIs aligned to narrative themes"},
+        {label:"Org-wide accessible/searchable"},
+        {label:"Feedback loop to update"}
+      ]},
+      "strat.decision_reversible": { label:"Decision cadence & reversibility", checks:[
+        {label:"ADRs mandatory for key decisions"},
+        {label:"Decision latency tracked"},
+        {label:"Reversal protocol defined"},
+        {label:"Reversal yield measured"},
+        {label:"Sunset/stop criteria documented"},
+        {label:"Periodic retro on major decisions"}
+      ]},
+      "cust.kpi_literacy": { label:"KPI literacy", checks:[
+        {label:"KPI registry with owners & formulas"},
+        {label:"KPI quiz ≥ threshold"},
+        {label:"Work items link to target KPI"},
+        {label:"KPI dashboards in rituals"},
+        {label:"Pre-release KPI forecast captured"},
+        {label:"Post-release delta reviewed"}
+      ]},
+      "cust.problem_framing": { label:"Problem framing", checks:[
+        {label:"Opportunity solution tree maintained"},
+        {label:"Assumptions log with tests"},
+        {label:"Impact sizing documented"},
+        {label:"Customer evidence attached"},
+        {label:"Alternatives compared"},
+        {label:"Triad-approved problem statement"}
+      ]},
+      "prod.discovery": { label:"Discovery & experiments", checks:[
+        {label:"Experiment template with hypothesis & MDE"},
+        {label:"Decision log links outcomes to experiments"},
+        {label:"Interview schedule & participant sourcing"},
+        {label:"Guardrail metrics defined"},
+        {label:"A/B or cohort platform with audit"},
+        {label:"Median time-to-insight ≤ 14 days"},
+        {label:"Quarterly kill-rate reported"},
+        {label:"Opportunity solution trees up to date"}
+      ]},
+      "prod.prioritisation": { label:"Prioritisation method", checks:[
+        {label:"Impact/risk/confidence/TTV scored"},
+        {label:"Option value or sequencing captured"},
+        {label:"Assumptions & ranges explicit"},
+        {label:"Result ties to strategy/OKRs"},
+        {label:"Periodic re-prioritisation"},
+        {label:"Decision log linked"}
+      ]},
+      "prod.roadmapping": { label:"Roadmapping", checks:[
+        {label:"Outcome-based roadmap"},
+        {label:"Dependencies & risks mapped"},
+        {label:"Replan cycle ≤ quarterly"},
+        {label:"Scenario/guardrails defined"},
+        {label:"Capacity assumptions listed"},
+        {label:"Public, versioned roadmap"}
+      ]},
+      "prod.gtm_readiness": { label:"Go-to-market readiness", checks:[
+        {label:"Launch playbook approved"},
+        {label:"Cohorting plan & ramp schedule"},
+        {label:"Enablement docs/demo/training"},
+        {label:"Support runbook & taxonomy ready"},
+        {label:"Pricing/packaging w/ telemetry"},
+        {label:"Readiness gates passed"},
+        {label:"Rollback/comms plan rehearsed"},
+        {label:"Post-launch metrics owner set"}
+      ]},
+      "arch.modularity": { label:"Modularity", checks:[
+        {label:"Domain/capability map defined"},
+        {label:"Service/module boundaries documented"},
+        {label:"Ownership per module clear"},
+        {label:"Change blast radius measured"},
+        {label:"Dependency graph maintained"},
+        {label:"Refactoring backlog exists"}
+      ]},
+      "arch.evolutionary": { label:"Evolutionary architecture", checks:[
+        {label:"Fitness functions defined"},
+        {label:"Fitness tests in CI"},
+        {label:"Architecture runway documented"},
+        {label:"Policy failures tracked"},
+        {label:"Refactor budget set"},
+        {label:"Architecture reviews regular"}
+      ]},
+      "arch.api_product": { label:"API productisation", checks:[
+        {label:"OpenAPI/IDL versioned"},
+        {label:"Contract tests in CI"},
+        {label:"SLAs/SLOs defined"},
+        {label:"API portal with docs/examples"},
+        {label:"SDKs/client libraries maintained"},
+        {label:"Usage analytics dashboard"},
+        {label:"Quota/auth policies enforced"},
+        {label:"Onboarding time ≤ target"}
+      ]},
       "arch.obs_by_design": { label:"Observability by design", checks:[
         {label:"Golden signals selected per service"},
         {label:"SLOs defined in code/config"},
@@ -292,15 +513,21 @@ const MODEL = {
         {label:"Telemetry coverage reported"},
         {label:"Synthetic checks or RUM enabled"}
       ]},
-      "arch.api_product": { label:"API productisation", checks:[
-        {label:"OpenAPI/IDL present and versioned"},
-        {label:"Contract tests in CI"},
-        {label:"SLAs/SLOs defined"},
-        {label:"API portal with docs/examples"},
-        {label:"SDKs/client libraries maintained"},
-        {label:"Usage analytics dashboard"},
-        {label:"Quota/auth policies enforced"},
-        {label:"Onboarding time ≤ target evidenced"}
+      "eng.code_review_gates": { label:"Code review & gates", checks:[
+        {label:"Peer review required"},
+        {label:"Static checks/lint/format enforced"},
+        {label:"Quality/security gates on PR"},
+        {label:"AI assist guardrails"},
+        {label:"Review SLA tracked"},
+        {label:"Rollback/test evidence in PR"}
+      ]},
+      "eng.dev_workflow": { label:"Dev workflow", checks:[
+        {label:"Dev containers or cloud IDE"},
+        {label:"PR previews with seeded data"},
+        {label:"One-command bootstrap"},
+        {label:"Local/prod parity documented"},
+        {label:"Toolchain version pinning"},
+        {label:"Setup time ≤ target"}
       ]},
       "eng.iac_gitops": { label:"IaC & GitOps", checks:[
         {label:"Infra provisioned via code"},
@@ -342,158 +569,6 @@ const MODEL = {
         {label:"Queue age visualised"},
         {label:"Monthly Kaizen on top constraint"}
       ]},
-      "prod.discovery": { label:"Discovery & experiments", checks:[
-        {label:"Experiment template with hypothesis, metrics, MDE"},
-        {label:"Decision log links outcomes to experiments"},
-        {label:"Interview schedule & participant sourcing"},
-        {label:"Guardrail metrics defined"},
-        {label:"A/B or cohort platform with audit trail"},
-        {label:"Median time-to-insight ≤ 14 days"},
-        {label:"Quarterly kill-rate reported"},
-        {label:"Opportunity solution trees up to date"}
-      ]},
-      "prod.gtm_readiness": { label:"Go-to-market readiness", checks:[
-        {label:"Launch playbook approved"},
-        {label:"Cohorting plan & ramp schedule"},
-        {label:"Enablement docs/demo/training"},
-        {label:"Support runbook & taxonomy ready"},
-        {label:"Pricing/packaging with telemetry"},
-        {label:"Readiness gates passed"},
-        {label:"Rollback/comms plan rehearsed"},
-        {label:"Post-launch metrics owner set"}
-      ]},
-      "docs.adrs_quality": { label:"ADRs & decision quality", checks:[
-        {label:"ADR template with IDs & owners"},
-        {label:"Decision latency tracked"},
-        {label:"Reversal decisions recorded"},
-        {label:"ADRs link to expected impact"},
-        {label:"Decision quality review"},
-        {label:"Discoverable/indexed"},
-        {label:"Cross-team visibility"},
-        {label:"Deprecated ADRs mark successors"}
-      ]},
-      "org.team_autonomy": { label:"Team autonomy & ownership", checks:[
-        {label:"Decision rights matrix (RACI)"},
-        {label:"Squad owns on-call & incidents"},
-        {label:"Squad owns service catalogue entries"},
-        {label:"Infra controls with guardrails"},
-        {label:"Low-risk changes approved in squad"},
-        {label:"Autonomy score surveyed"},
-        {label:"Escalation paths documented"},
-        {label:"Ops cost prompts in planning"}
-      ]},
-      "econ.squad_budget": { label:"Squad budget accountability", checks:[
-        {label:"Budget envelope defined"},
-        {label:"Guardrails (limits/approvals)"},
-        {label:"Monthly variance tracking"},
-        {label:"Spend vs outcome review"},
-        {label:"Reallocate within envelope"},
-        {label:"Quarterly reconciliation"},
-        {label:"Cost forecasts in planning"},
-        {label:"Experiment spend tracked"}
-      ]},
-      "data.data_sla_lineage": { label:"Data quality SLAs & lineage", checks:[
-        {label:"Data contracts defined (schema+SLAs)"},
-        {label:"Lineage graph (source→sink→dashboard)"},
-        {label:"Freshness/completeness monitors"},
-        {label:"Breach routing to owners"},
-        {label:"Backfills automated/scripted"},
-        {label:"Ownership metadata complete"},
-        {label:"Test datasets/sandbox defined"},
-        {label:"Quarterly data review with product"}
-      ]},
-      "xp.perf_budgets_rum": { label:"Performance budgets & RUM", checks:[
-        {label:"Perf budgets per page/flow"},
-        {label:"Budgets enforced in CI"},
-        {label:"RUM instrumented on key flows"},
-        {label:"Perf dashboards with cohorts"},
-        {label:"PR perf regression auto-flags"},
-        {label:"Perf SLOs tied to KPIs"},
-        {label:"Synthetic checks for critical flows"},
-        {label:"Perf remediation backlog"}
-      ]},
-
-      /* remaining (6-check concise) — auto-profiled */
-      "strat.exec_narrative": { label:"Executive single narrative", checks:[
-        {label:"Narrative links customer/tech/finance"},
-        {label:"Versioned & refreshed quarterly"},
-        {label:"Referenced in exec reviews/QBRs"},
-        {label:"KPIs aligned to narrative themes"},
-        {label:"Org-wide accessible/searchable"},
-        {label:"Feedback loop to update"}
-      ]},
-      "strat.decision_reversible": { label:"Decision cadence & reversibility", checks:[
-        {label:"ADRs mandatory for key decisions"},
-        {label:"Decision latency tracked"},
-        {label:"Reversal protocol defined"},
-        {label:"Reversal yield measured"},
-        {label:"Sunset/stop criteria documented"},
-        {label:"Periodic retro on major decisions"}
-      ]},
-      "cust.kpi_literacy": { label:"KPI literacy", checks:[
-        {label:"KPI registry with owners & formulas"},
-        {label:"Squad KPI quiz ≥ threshold"},
-        {label:"Work items link to target KPI"},
-        {label:"KPI dashboards in rituals"},
-        {label:"Pre-release KPI forecast captured"},
-        {label:"Post-release delta reviewed"}
-      ]},
-      "cust.problem_framing": { label:"Problem framing", checks:[
-        {label:"Opportunity solution tree maintained"},
-        {label:"Assumptions log with tests"},
-        {label:"Impact sizing documented"},
-        {label:"Customer evidence attached"},
-        {label:"Alternatives compared"},
-        {label:"Triad-approved problem statement"}
-      ]},
-      "prod.prioritisation": { label:"Prioritisation method", checks:[
-        {label:"Impact/risk/confidence/TTV scored"},
-        {label:"Option value/sequencing captured"},
-        {label:"Assumptions & ranges explicit"},
-        {label:"Ties to strategy/OKRs"},
-        {label:"Periodic re-prioritisation"},
-        {label:"Decision log linked"}
-      ]},
-      "prod.roadmapping": { label:"Roadmapping", checks:[
-        {label:"Outcome-based roadmap"},
-        {label:"Dependencies & risks mapped"},
-        {label:"Replan cycle ≤ quarterly"},
-        {label:"Scenario/guardrails defined"},
-        {label:"Capacity assumptions listed"},
-        {label:"Public, versioned roadmap"}
-      ]},
-      "arch.modularity": { label:"Modularity", checks:[
-        {label:"Domain/capability map defined"},
-        {label:"Service/module boundaries documented"},
-        {label:"Ownership per module clear"},
-        {label:"Change blast radius measured"},
-        {label:"Dependency graph maintained"},
-        {label:"Refactoring backlog exists"}
-      ]},
-      "arch.evolutionary": { label:"Evolutionary architecture", checks:[
-        {label:"Fitness functions defined"},
-        {label:"Fitness tests in CI"},
-        {label:"Architecture runway documented"},
-        {label:"Policy failures tracked"},
-        {label:"Refactor budget set"},
-        {label:"Architecture reviews regular"}
-      ]},
-      "eng.code_review_gates": { label:"Code review & gates", checks:[
-        {label:"Peer review required"},
-        {label:"Static checks/lint/format enforced"},
-        {label:"Quality/security gates on PR"},
-        {label:"AI assist guardrails"},
-        {label:"Review SLA tracked"},
-        {label:"Rollback/test evidence in PR"}
-      ]},
-      "eng.dev_workflow": { label:"Dev workflow", checks:[
-        {label:"Dev containers or cloud IDE"},
-        {label:"PR previews with seeded data"},
-        {label:"One-command bootstrap"},
-        {label:"Local/prod parity documented"},
-        {label:"Toolchain version pinning"},
-        {label:"Setup time ≤ target"}
-      ]},
       "deliv.planning_adapt": { label:"Planning cadence & adaptability", checks:[
         {label:"Quarterly OKRs set & tracked"},
         {label:"Decision records maintained"},
@@ -507,7 +582,7 @@ const MODEL = {
         {label:"Blameless RCA template used"},
         {label:"Runbooks per top alerts"},
         {label:"Drills/table-tops held"},
-        {label:"Actions tracked to closure"},
+        {label:"Action items tracked to closure"},
         {label:"Incident metrics dashboard"}
       ]},
       "reliab.anomaly": { label:"Anomaly detection", checks:[
@@ -568,6 +643,16 @@ const MODEL = {
         {label:"Self-serve labs/sandboxes"},
         {label:"Feedback loop on path"}
       ]},
+      "docs.adrs_quality": { label:"ADRs & decision quality", checks:[
+        {label:"ADR template with IDs & owners"},
+        {label:"Decision latency tracked"},
+        {label:"Reversal decisions recorded"},
+        {label:"ADRs link to expected impact"},
+        {label:"Decision quality review"},
+        {label:"Discoverable/indexed"},
+        {label:"Cross-team visibility"},
+        {label:"Deprecated ADRs mark successors"}
+      ]},
       "docs.audit_trace": { label:"Audit & traceability", checks:[
         {label:"User & system action logging"},
         {label:"Searchable within minutes"},
@@ -577,12 +662,22 @@ const MODEL = {
         {label:"Access audit reports"}
       ]},
       "org.role_triad": { label:"Role clarity & triad", checks:[
-        {label:"EM/Product/Platform triad named"},
+        {label:"EM/Product/Design triad named"},
         {label:"Decision rights documented"},
         {label:"Triad rituals (weekly)"},
         {label:"Escalation routes"},
         {label:"Role backfills planned"},
         {label:"Outcome ownership in goals"}
+      ]},
+      "org.team_autonomy": { label:"Team autonomy & ownership", checks:[
+        {label:"Decision rights matrix (RACI)"},
+        {label:"Squad owns on-call & incidents"},
+        {label:"Squad owns service catalogue entries"},
+        {label:"Infra controls with guardrails"},
+        {label:"Low-risk changes approved in squad"},
+        {label:"Autonomy score surveyed"},
+        {label:"Escalation paths documented"},
+        {label:"Ops cost prompts in planning"}
       ]},
       "org.growth_calibration": { label:"Growth & calibration", checks:[
         {label:"Lattice with competencies"},
@@ -597,8 +692,18 @@ const MODEL = {
         {label:"AMAs/surveys (listening)"},
         {label:"Systems thinking training"},
         {label:"Outcome-based goals"},
-        {label:"Recognise learning (not just output)"},
+        {label:"Recognise learning, not just output"},
         {label:"Visible retros/actions"}
+      ]},
+      "econ.squad_budget": { label:"Squad budget accountability", checks:[
+        {label:"Budget envelope defined"},
+        {label:"Guardrails (limits/approvals)"},
+        {label:"Monthly variance tracking"},
+        {label:"Spend vs outcome review"},
+        {label:"Reallocate within envelope"},
+        {label:"Quarterly reconciliation"},
+        {label:"Cost forecasts in planning"},
+        {label:"Experiment spend tracked"}
       ]},
       "econ.pricing_levers": { label:"Pricing & value levers", checks:[
         {label:"Telemetry inputs to pricing"},
@@ -606,7 +711,7 @@ const MODEL = {
         {label:"Change cycle time measured"},
         {label:"Cohort guardrails defined"},
         {label:"Packaging linked to outcomes"},
-        {label:"Revenue impact tracking"}
+        {label:"Revenue impact tracked"}
       ]},
       "econ.finops": { label:"FinOps practice", checks:[
         {label:"Tagging coverage ≥ threshold"},
@@ -615,6 +720,16 @@ const MODEL = {
         {label:"Budget vs forecast dashboards"},
         {label:"Rightsizing/RI playbooks"},
         {label:"Monthly FinOps review"}
+      ]},
+      "data.data_sla_lineage": { label:"Data quality SLAs & lineage", checks:[
+        {label:"Data contracts defined (schema+SLAs)"},
+        {label:"Lineage graph (source→sink→dashboard)"},
+        {label:"Freshness/completeness monitors"},
+        {label:"Breach routing to owners"},
+        {label:"Backfills automated/scripted"},
+        {label:"Ownership metadata complete"},
+        {label:"Test datasets/sandbox defined"},
+        {label:"Quarterly data review with product"}
       ]},
       "data.model_lifecycle": { label:"Model lifecycle & monitoring", checks:[
         {label:"Model registry with versions & lineage"},
@@ -639,6 +754,16 @@ const MODEL = {
         {label:"Query templates"},
         {label:"Training/how-tos"},
         {label:"Query latency SLAs"}
+      ]},
+      "xp.perf_budgets_rum": { label:"Performance budgets & RUM", checks:[
+        {label:"Perf budgets per page/flow"},
+        {label:"Budgets enforced in CI"},
+        {label:"RUM instrumented on key flows"},
+        {label:"Perf dashboards with cohorts"},
+        {label:"PR perf regression auto-flags"},
+        {label:"Perf SLOs tied to KPIs"},
+        {label:"Synthetic checks for critical flows"},
+        {label:"Perf remediation backlog"}
       ]},
       "xp.accessibility": { label:"Accessibility & inclusion", checks:[
         {label:"WCAG targets & audits scheduled"},
@@ -668,57 +793,49 @@ const MODEL = {
   }
 };
 
-/* ------- auto-type/weight helpers for legacy items ------- */
+/* auto-type/weight helpers */
 const TAPER8 = [20,15,15,15,10,10,10,5];
 const TAPER6 = [20,20,15,15,15,15];
 function patchModel(){
   const P = MODEL.fullModel.parameters;
   for(const pid of Object.keys(P)){
     const def = P[pid];
-    def.checks.forEach(ch=>{
-      if(!ch.type) ch.type = "check";
-    });
-    // if all weights missing or equal, apply tapered
-    const hasExplicit = def.checks.some(ch=> typeof ch.w === "number");
-    if(!hasExplicit){
-      const n = def.checks.length;
-      let prof = null;
-      if(n===8) prof = TAPER8;
-      else if(n===6) prof = TAPER6;
-      else {
-        // generic decay profile
+    def.checks.forEach(ch=>{ if(!ch.type) ch.type="check"; });
+    const hasW = def.checks.some(ch=> typeof ch.w==="number");
+    if(!hasW){
+      const n=def.checks.length;
+      let prof = (n===8?TAPER8:(n===6?TAPER6:null));
+      if(!prof){
         prof = Array.from({length:n},(_,i)=> Math.max(8, Math.round(100 * Math.pow(0.88,i))));
-        const sum = prof.reduce((a,b)=>a+b,0);
-        prof = prof.map(x=> Math.round(100*x/sum));
-        // fix rounding to 100
-        const diff = 100 - prof.reduce((a,b)=>a+b,0);
-        if(diff!==0) prof[0]+=diff;
+        const s=prof.reduce((a,b)=>a+b,0);
+        prof = prof.map(x=> Math.round(100*x/s));
+        const d=100-prof.reduce((a,b)=>a+b,0); if(d) prof[0]+=d;
       }
       def.checks.forEach((ch,i)=> ch.w = prof[i] ?? Math.round(100/n));
     } else {
-      // normalize to ~100
-      const sum = def.checks.reduce((a,ch)=> a+(ch.w||0),0);
-      if(sum>0) def.checks.forEach(ch=> ch.w = +(ch.w*100/sum).toFixed(2));
+      const s = def.checks.reduce((a,ch)=>a+(ch.w||0),0);
+      if(s>0) def.checks.forEach(ch=> ch.w = +(ch.w*100/s).toFixed(2));
     }
-    // heuristics: make some items percent/scale if label hints and no explicit type
+    // Heuristics: convert some labels into scales if not explicit
     def.checks.forEach(ch=>{
       if(ch.type==="check"){
-        const L = (ch.label||"").toLowerCase();
-        if(/coverage|%|tagging coverage|slo coverage|adoption/.test(L)) ch.type="scale100";
-        if(/p95|median|mttr|time to|setup time|frequency|rate/.test(L)) ch.type="scale5";
+        const L=(ch.label||"").toLowerCase();
+        if(/coverage|%|adoption|frequency|rate/.test(L)) ch.type="scale5"; // fallback
+        if(/coverage %|slo coverage|lineage|tagging/.test(L)) ch.type="scale100";
+        if(/p95|median|mttr|lead time|time to|setup time/.test(L)) ch.type="scale5";
       }
     });
   }
 }
 patchModel();
 
-/* ========================= UTILITIES ========================= */
-const STORAGE_KEYS = { core:"oemm_core24_mixed", full:"oemm_full12_mixed" };
+/* STATE & VIEW */
+const STORAGE_KEYS = { core:"oemm_core24_seq", full:"oemm_full12_seq" };
+let currentModule="core";    // 'core' | 'full'
+let currentView="pillar";    // 'pillar' | 'tier'
 const formArea = document.getElementById("formArea");
-const btnCore = document.getElementById("btnCore");
-const btnFull = document.getElementById("btnFull");
-let currentModule = "core";
 
+/* utils */
 function b64(s){ return btoa(unescape(encodeURIComponent(s))).replace(/=+$/,''); }
 function fmt(n,d=1){ return (n==null||isNaN(n)) ? "—" : (+n).toFixed(d); }
 function indexToScale(idx){
@@ -736,40 +853,30 @@ function band(scale){
   if(scale<=4) return "Level 4 – Outcome oriented";
   return "Level 5 – Outcome engineered";
 }
+function getSaved(){ return JSON.parse(localStorage.getItem(STORAGE_KEYS[currentModule]) || "{}"); }
+function setSaved(S){ localStorage.setItem(STORAGE_KEYS[currentModule], JSON.stringify(S)); }
 
-/* ========================= RENDER ========================= */
+/* RENDER */
 function render(){
   formArea.innerHTML="";
-  if(currentModule==="core") renderCore();
-  else renderFull();
+  if(currentView==="pillar") renderByPillar();
+  else renderByTier();
   attachHandlers();
   compute();
 }
-function renderCore(){
-  const groups = {};
-  MODEL.core24.forEach(pid=>{
-    const pillar = MODEL.fullModel.pillars.find(p=>p.parameters.includes(pid)).name;
-    (groups[pillar]=groups[pillar]||[]).push(pid);
-  });
-  Object.keys(groups).forEach(pillar=>{
-    const card = document.createElement("div");
-    card.className="pillar-card";
-    card.innerHTML = `
-      <header style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex;gap:8px;align-items:baseline">
-          <h3 class="h3">${pillar}</h3>
-          <span class="pill">Weight: ${MODEL.weights[pillar]}</span>
-        </div>
-        <span class="muted">${groups[pillar].length} items</span>
-      </header>
-      <div></div>`;
-    const inner = card.lastElementChild;
-    groups[pillar].forEach(pid=> inner.appendChild(renderParam(pillar,pid)));
-    formArea.appendChild(card);
-  });
+function visibleParamIds(){
+  const all = MODEL.fullModel.pillars.flatMap(p=>p.parameters);
+  if(currentModule==="core"){
+    const set = new Set(MODEL.core24);
+    return all.filter(id=> set.has(id));
+  }
+  return all;
 }
-function renderFull(){
+function renderByPillar(){
+  const vis = new Set(visibleParamIds());
   MODEL.fullModel.pillars.forEach(block=>{
+    const params = block.parameters.filter(p=>vis.has(p));
+    if(!params.length) return;
     const card = document.createElement("div");
     card.className="pillar-card";
     card.innerHTML = `
@@ -778,27 +885,63 @@ function renderFull(){
           <h3 class="h3">${block.name}</h3>
           <span class="pill">Weight: ${MODEL.weights[block.name]}</span>
         </div>
-        <span class="muted">${block.parameters.length} items</span>
+        <span class="muted">${params.length} items</span>
       </header>
       <div></div>`;
     const inner = card.lastElementChild;
-    block.parameters.forEach(pid=> inner.appendChild(renderParam(block.name,pid)));
+    params.forEach(pid=> inner.appendChild(renderParam(block.name,pid)));
     formArea.appendChild(card);
   });
 }
-function renderParam(pillarName, pid){
+function renderByTier(){
+  const vis = new Set(visibleParamIds());
+  const tiers = {};
+  vis.forEach(pid=>{
+    const t = PARAM_META[pid]?.tier || 6;
+    (tiers[t]=tiers[t]||[]).push(pid);
+  });
+  Object.keys(tiers).sort((a,b)=>a-b).forEach(t=>{
+    const ids = tiers[t];
+    const card = document.createElement("div");
+    card.className="pillar-card";
+    card.innerHTML = `
+      <header style="display:flex;justify-content:space-between;align-items:center">
+        <div class="titleWrap">
+          <h3 class="h3">Tier ${t}</h3>
+          <span class="tierTag">Low→High sequence</span>
+        </div>
+        <span class="muted">${ids.length} items</span>
+      </header>
+      <div></div>`;
+    const inner = card.lastElementChild;
+    ids.forEach(pid=>{
+      const pill = MODEL.fullModel.pillars.find(p=>p.parameters.includes(pid))?.name || "—";
+      inner.appendChild(renderParam(pill,pid,true));
+    });
+    formArea.appendChild(card);
+  });
+}
+function renderParam(pillarName, pid, showPillarChip=false){
   const def = MODEL.fullModel.parameters[pid];
+  const meta = PARAM_META[pid] || {};
   const key = b64(pid);
   const wrap = document.createElement("div");
   wrap.className="item";
   wrap.innerHTML = `
     <header>
-      <div>
+      <div class="titleWrap">
+        ${meta.popular?'<span class="ico star" title="Popular ★" data-pop="'+pid+'">★</span>':''}
         <div style="font-weight:700">${def.label}</div>
-        <div class="tiny">${pillarName} • <code style="font-size:11px;color:#9fb2ff">${pid}</code></div>
+        ${showPillarChip?`<span class="pill">${pillarName}</span>`:""}
+        <span class="tierTag">Tier ${meta.tier||"—"}</span>
+        <div class="icons">
+          ${ (meta.dependsOn && meta.dependsOn.length) ? `<span class="ico chain" title="Dependencies" data-dep="${pid}">⛓️</span>` : "" }
+          <span class="ico info" title="Details" data-info="${pid}">ⓘ</span>
+        </div>
       </div>
       <span class="score-badge" id="badge-${key}">—</span>
     </header>
+    <div class="tiny" style="margin-top:2px"><code style="font-size:11px;color:#9fb2ff">${pid}</code></div>
     <div class="progress" style="margin:8px 0"><div id="bar-${key}" class="bar" style="width:0%"></div></div>
     <div class="tiny" id="meta-${key}">Compliance: —% • Index: — • Scale: —</div>
     <div class="checks" id="checks-${key}"></div>
@@ -806,37 +949,39 @@ function renderParam(pillarName, pid){
   const area = wrap.querySelector(`#checks-${key}`);
   const saved = getSaved()[pid] || {};
   def.checks.forEach((ch,i)=>{
-    const cid = `${key}-${i}`;
     const row = document.createElement("div"); row.className="row";
-    const weight = (typeof ch.w==="number") ? ch.w : 0;
     const type = ch.type || "check";
-    let control = "";
+    const w = (typeof ch.w==="number")? ch.w : 0;
+    let control="";
     if(type==="check"){
       control = `<label class="row" style="gap:8px">
-        <input type="checkbox" data-type="check" data-pillar="${pillarName}" data-param="${pid}" data-index="${i}" />
+        <input type="checkbox" data-type="check" data-param="${pid}" data-index="${i}" />
         <span>${ch.label}</span>
       </label>`;
     } else if(type==="scale5"){
       const val = saved[i]?.v ?? 0;
-      control = `<div class="row" style="gap:8px">
-        <input type="range" min="0" max="5" step="0.5" value="${val}" data-type="scale5" data-pillar="${pillarName}" data-param="${pid}" data-index="${i}"/>
-        <span class="chip">0–5</span><span class="tiny">${ch.help||""}</span>
+      control = `<div class="row" style="gap:8px;flex-wrap:wrap">
+        <input type="range" min="0" max="5" step="0.5" value="${val}" data-type="scale5" data-param="${pid}" data-index="${i}"/>
+        <span class="chip">0–5</span>
+        <button class="ico info" title="Scale info" data-scale="${ch.scaleRef||''}" data-scale-owner="${pid}" data-scale-idx="${i}">ⓘ</button>
+        <span class="tiny">${ch.purpose||""}</span>
       </div>`;
-    } else { // scale100
+    } else {
       const val = saved[i]?.v ?? 0;
-      control = `<div class="row" style="gap:8px">
-        <input type="range" min="0" max="100" step="5" value="${val}" data-type="scale100" data-pillar="${pillarName}" data-param="${pid}" data-index="${i}"/>
-        <span class="chip">0–100%</span><span class="tiny">${ch.help||""}</span>
+      control = `<div class="row" style="gap:8px;flex-wrap:wrap">
+        <input type="range" min="0" max="100" step="5" value="${val}" data-type="scale100" data-param="${pid}" data-index="${i}"/>
+        <span class="chip">0–100%</span>
+        <button class="ico info" title="Scale info" data-scale="${ch.scaleRef||''}" data-scale-owner="${pid}" data-scale-idx="${i}">ⓘ</button>
+        <span class="tiny">${ch.purpose||""}</span>
       </div>`;
     }
     row.innerHTML = `
       <div style="flex:1">${control}</div>
-      <span class="chip">w: ${weight}%</span>
-      <label class="na"><input type="checkbox" data-na="1" data-pillar="${pillarName}" data-param="${pid}" data-index="${i}"/> N/A</label>
+      <span class="chip">w: ${w}%</span>
+      <label class="na"><input type="checkbox" data-na="1" data-param="${pid}" data-index="${i}"/> N/A</label>
     `;
     area.appendChild(row);
 
-    // restore saved state
     const ctrl = row.querySelector(`[data-param="${pid}"][data-index="${i}"]:not([data-na])`);
     if(saved[i]){
       if(ctrl.dataset.type==="check") ctrl.checked = !!saved[i].v;
@@ -848,125 +993,197 @@ function renderParam(pillarName, pid){
   return wrap;
 }
 
-/* ========================= STATE ========================= */
-function getSaved(){ return JSON.parse(localStorage.getItem(STORAGE_KEYS[currentModule]) || "{}"); }
-function setSaved(S){ localStorage.setItem(STORAGE_KEYS[currentModule], JSON.stringify(S)); }
-function saveAll(){ alert("Saved locally."); }
-function loadAll(){ render(); alert("Loaded (if previously saved)."); }
-function resetAll(){
-  if(!confirm("Clear all selections for this module?")) return;
-  localStorage.removeItem(STORAGE_KEYS[currentModule]); render();
+/* MODAL */
+const overlay = document.getElementById("overlay");
+const modalTitle = document.getElementById("modalTitle");
+const modalContent = document.getElementById("modalContent");
+document.getElementById("modalClose").addEventListener("click", ()=> overlay.style.display="none");
+overlay.addEventListener("click", e=>{ if(e.target===overlay) overlay.style.display="none"; });
+function openModal(title, html){
+  modalTitle.textContent = title;
+  modalContent.innerHTML = html;
+  overlay.style.display="flex";
+}
+function paramInfoHTML(pid){
+  const def = MODEL.fullModel.parameters[pid];
+  const meta = PARAM_META[pid] || {};
+  const scaleItems = def.checks.map((ch,i)=> ({ch,i})).filter(x=> x.ch.type==="scale5" || x.ch.type==="scale100");
+  let scalesHTML = "";
+  if(scaleItems.length){
+    scalesHTML = `<h4>Scales & anchors</h4>`;
+    scaleItems.forEach(({ch,i})=>{
+      const sc = SCALE_CATALOG[ch.scaleRef||""] || null;
+      const label = ch.label + (sc?` — <em>${sc.label}</em>`:"");
+      const purpose = ch.purpose || (sc?sc.purpose:"");
+      const anchors = sc? `<ul class="bul">${sc.anchors.map(a=>`<li>${a}</li>`).join("")}</ul>` : "";
+      scalesHTML += `<div style="margin:8px 0">
+        <strong>${label}</strong><div class="tiny">${purpose}</div>${anchors}
+      </div>`;
+    });
+  }
+  const deps = (meta.dependsOn||[]).map(d=>`<code>${d}</code>`).join(", ");
+  return `
+    <div class="tiny" style="margin-bottom:6px"><code>${pid}</code></div>
+    <p>${meta.purpose || "No description available."}</p>
+    ${meta.popular?`<p class="tiny">★ Popular: commonly adopted / high ROI</p>`:""}
+    ${meta.dependsOn && meta.dependsOn.length ? `<p><strong>Depends on:</strong> ${deps}</p>`:""}
+    ${scalesHTML}
+  `;
 }
 
-/* ========================= COMPUTE ========================= */
+/* EVENTS / PERSIST */
+function attachHandlers(){
+  formArea.addEventListener("click", e=>{
+    const t=e.target;
+    if(t.matches('[data-info]')){ const pid=t.getAttribute('data-info'); openModal(MODEL.fullModel.parameters[pid].label, paramInfoHTML(pid)); }
+    if(t.matches('[data-pop]')){ const pid=t.getAttribute('data-pop'); openModal(MODEL.fullModel.parameters[pid].label, paramInfoHTML(pid)); }
+    if(t.matches('[data-dep]')){
+      const pid=t.getAttribute('data-dep'); const meta = PARAM_META[pid]||{}; const current = compute(true);
+      let html = `<div class="tiny" style="margin-bottom:6px"><code>${pid}</code></div>`;
+      if(!meta.dependsOn || !meta.dependsOn.length){ html += "<p>No dependencies.</p>"; }
+      else{
+        html += "<ul class='bul'>";
+        meta.dependsOn.forEach(d=>{
+          const scl = current.perParam?.[d]?.scale ?? null;
+          const label = MODEL.fullModel.parameters[d]?.label || d;
+          html += `<li><strong>${label}</strong> <span class="tiny">(${d})</span> — status: <b>${fmt(scl,1)}</b></li>`;
+        });
+        html += "</ul>";
+      }
+      openModal("Dependencies", html);
+    }
+    if(t.matches('[data-scale]')){
+      const ref=t.getAttribute('data-scale'); const pid=t.getAttribute('data-scale-owner');
+      const sc = SCALE_CATALOG[ref] || null; if(!sc){ openModal("Scale", "<p>No scale info available.</p>"); return; }
+      openModal(sc.label, `<p>${sc.purpose}</p><ul class="bul">${sc.anchors.map(a=>`<li>${a}</li>`).join("")}</ul>`);
+    }
+  });
+  formArea.addEventListener("change", e=>{
+    const t=e.target;
+    if(t.matches('[data-na="1"]')){
+      const ctrl = t.closest(".row").querySelector('[data-param][data-index]:not([data-na])');
+      if(ctrl){ ctrl.disabled = t.checked; }
+    }
+    compute();
+  });
+}
+function saveAll(){ alert("Saved locally."); }
+function loadAll(){ render(); alert("Loaded (if previously saved)."); }
+function resetAll(){ if(!confirm("Clear all selections for this module?")) return; localStorage.removeItem(STORAGE_KEYS[currentModule]); render(); }
+
+document.getElementById("btnCompute").addEventListener("click", ()=>compute());
+document.getElementById("btnSave").addEventListener("click", saveAll);
+document.getElementById("btnLoad").addEventListener("click", loadAll);
+document.getElementById("btnReset").addEventListener("click", resetAll);
+document.getElementById("btnExport").addEventListener("click", ()=>{
+  const payload = { module:currentModule, view:currentView, ts:new Date().toISOString(), selections:getSaved(), results:compute(true) };
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`oemm_${currentModule}_${Date.now()}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+});
+document.getElementById("btnCore").addEventListener("click", ()=>{
+  currentModule="core";
+  document.getElementById("btnCore").classList.add("active");
+  document.getElementById("btnFull").classList.remove("active");
+  render();
+});
+document.getElementById("btnFull").addEventListener("click", ()=>{
+  currentModule="full";
+  document.getElementById("btnFull").classList.add("active");
+  document.getElementById("btnCore").classList.remove("active");
+  render();
+});
+document.getElementById("btnViewPillar").addEventListener("click", ()=>{
+  currentView="pillar";
+  document.getElementById("btnViewPillar").classList.add("active");
+  document.getElementById("btnViewTier").classList.remove("active");
+  render();
+});
+document.getElementById("btnViewTier").addEventListener("click", ()=>{
+  currentView="tier";
+  document.getElementById("btnViewTier").classList.add("active");
+  document.getElementById("btnViewPillar").classList.remove("active");
+  render();
+});
+
+/* COMPUTATION */
 function collectCompliance(){
   const out = {};
-  const blocks = (currentModule==="core")
-    ? (()=>{ const map={}; MODEL.core24.forEach(pid=>{
-         const pillar = MODEL.fullModel.pillars.find(p=>p.parameters.includes(pid)).name;
-         (map[pillar]=map[pillar]||[]).push(pid);
-       }); return Object.entries(map).map(([name,params])=>({name,params})); })()
-    : MODEL.fullModel.pillars.map(p=>({name:p.name, params:p.parameters}));
-
   const saved = getSaved();
-
-  // prepare from DOM & persist
   document.querySelectorAll('[data-param][data-index]:not([data-na])').forEach(ctrl=>{
-    const pid = ctrl.dataset.param, idx = ctrl.dataset.index;
+    const pid = ctrl.dataset.param, i = ctrl.dataset.index;
     saved[pid] = saved[pid] || {};
     const type = ctrl.dataset.type;
     let v = 0;
     if(type==="check") v = ctrl.checked ? 1 : 0;
-    else if(type==="scale5") v = parseFloat(ctrl.value||"0")/5;
-    else v = parseFloat(ctrl.value||"0")/100; // scale100
-    const naEl = ctrl.parentElement.parentElement.querySelector('[data-na="1"]');
-    const na = naEl && naEl.checked;
-    saved[pid][idx] = { v: (type==="check")? (ctrl.checked?1:0): (type==="scale5"? parseFloat(ctrl.value||"0"): parseFloat(ctrl.value||"0")), na };
+    else if(type==="scale5") v = parseFloat(ctrl.value||"0");
+    else v = parseFloat(ctrl.value||"0");
+    const naEl = ctrl.closest(".row").querySelector('[data-na="1"]');
+    const na = !!(naEl && naEl.checked);
+    saved[pid][i] = { v, na };
   });
-  // persist now
   setSaved(saved);
-
-  // compute per parameter
-  Object.keys(MODEL.fullModel.parameters).forEach(pid=>{
-    // skip if not rendered (e.g., full vs core)
-    if(!document.querySelector(`[id^="checks-${b64(pid)}"]`)) return;
+  visibleParamIds().forEach(pid=>{
     const def = MODEL.fullModel.parameters[pid];
     let num=0, den=0;
     def.checks.forEach((ch,i)=>{
-      const rec = saved[pid]?.[i];
-      const na = rec?.na;
-      const w = (typeof ch.w==="number") ? ch.w : 0;
-      if(na) return; // exclude from denominator
+      const rec = saved[pid]?.[i]; const w = (typeof ch.w==="number")? ch.w : 0;
+      if(rec?.na) return;
       let val = 0;
       if(rec){
         if(ch.type==="check") val = rec.v?1:0;
         else if(ch.type==="scale5") val = (rec.v||0)/5;
         else val = (rec.v||0)/100;
       }
-      num += w * val;
-      den += w;
+      num += w * val; den += w;
     });
-    const comp = den>0 ? (num/den)*100 : 0;
-    out[pid] = { index: comp, scale: indexToScale(comp) };
+    const idx = den>0 ? (num/den)*100 : 0;
+    out[pid] = { index: idx, scale: indexToScale(idx) };
   });
-
-  return { blocks, perParam: out };
+  return out;
 }
-
 function compute(silent=false){
-  const {blocks, perParam} = collectCompliance();
-
-  // update per-parameter UI
+  const comp = collectCompliance();
   if(!silent){
-    Object.keys(perParam).forEach(pid=>{
-      const idx = perParam[pid].index, scl = perParam[pid].scale;
+    Object.keys(comp).forEach(pid=>{
+      const idx=comp[pid].index, scl=comp[pid].scale;
       const key=b64(pid);
-      const meta = document.getElementById(`meta-${key}`);
-      const bar  = document.getElementById(`bar-${key}`);
-      const badge= document.getElementById(`badge-${key}`);
+      const meta=document.getElementById(`meta-${key}`);
+      const bar=document.getElementById(`bar-${key}`);
+      const badge=document.getElementById(`badge-${key}`);
       if(meta) meta.textContent = `Compliance: ${fmt(idx,0)}% • Index: ${fmt(idx,0)} • Scale: ${fmt(scl,1)}`;
-      if(bar)  bar.style.width = `${Math.max(0,Math.min(100,idx))}%`;
+      if(bar) bar.style.width = `${Math.max(0,Math.min(100,idx))}%`;
       if(badge){
         badge.textContent = fmt(scl,1);
         badge.className = "score-badge " + (scl>=4?"score-good":scl>=3?"score-warn":"score-bad");
       }
     });
   }
-
-  // pillar indices
-  const pillarIdx = {};
-  let sumW=0, sumWx=0;
-  blocks.forEach(b=>{
-    const idxs = b.params
-      .filter(pid => perParam[pid]!=null)
-      .map(pid => perParam[pid].index);
+  const byPillar = {};
+  MODEL.fullModel.pillars.forEach(p=>{
+    const ids = p.parameters.filter(id => visibleParamIds().includes(id));
+    if(!ids.length) return;
+    const idxs = ids.map(id => comp[id]?.index).filter(v=>v!=null);
     const avg = idxs.length ? idxs.reduce((a,c)=>a+c,0)/idxs.length : null;
-    pillarIdx[b.name] = avg;
-    if(avg!=null){ sumW += MODEL.weights[b.name]; sumWx += MODEL.weights[b.name]*avg; }
+    byPillar[p.name] = avg;
   });
-
-  const overallIndexPre = sumW>0 ? (sumWx/sumW) : null;
+  let sumW=0, sumWx=0;
+  Object.keys(byPillar).forEach(p=>{
+    const idx = byPillar[p];
+    if(idx!=null){ sumW += MODEL.weights[p]||0; sumWx += (MODEL.weights[p]||0)*idx; }
+  });
+  const overallIndexPre = sumW? (sumWx/sumW) : null;
   const overallScalePre = indexToScale(overallIndexPre);
-
-  // gates
   const gates = MODEL.gates.map(g=>{
-    const vals = g.params.map(pid => perParam[pid]?.scale ?? null);
-    const missing = vals.some(v=>v==null);
-    let pass=false;
-    if(!missing){
-      pass = (g.logical==="AND") ? vals.every(v=>v>=g.threshold) : vals.some(v=>v>=g.threshold);
-    }
-    return { id:g.id, label:g.label, pass, missing };
+    const vals = g.params.map(pid => comp[pid]?.scale ?? null);
+    const pass = vals.every(v=>v!=null) && ((g.logical==="AND") ? vals.every(v=>v>=g.threshold) : vals.some(v=>v>=g.threshold));
+    return { id:g.id, label:g.label, pass };
   });
   const allPass = gates.every(x=>x.pass);
-
-  // after gates
   let afterGatesScale = overallScalePre;
   if(afterGatesScale!=null && !allPass) afterGatesScale = Math.min(afterGatesScale,3.0);
-
-  // caps
   const caps = MODEL.caps.map(c=>{
-    const vals = c.params.map(pid => perParam[pid]?.scale ?? null);
+    const vals = c.params.map(pid => comp[pid]?.scale ?? null);
     let trigger=false;
     if(vals.every(v=>v!=null)){
       if(c.logic==="OR"){ trigger = (vals[0] < c.lt) || (vals[1] < c.lt); }
@@ -983,27 +1200,23 @@ function compute(silent=false){
     if(finalScale<=4) return 50 + (finalScale-3)*30;
     return 80 + (finalScale-4)*20;
   })();
-
-  // UI totals
   if(!silent){
     document.getElementById("overallIndex").textContent = fmt(finalIndex,1);
     document.getElementById("overallScale").textContent = fmt(finalScale,1);
     document.getElementById("overallBand").textContent = band(finalScale);
     document.getElementById("gatesPassed").textContent = allPass ? "All" : `${gates.filter(x=>x.pass).length}/${MODEL.gates.length}`;
     renderGateCaps(gates,caps);
-    renderPillars(pillarIdx);
+    renderBreakdown(byPillar);
   }
-
-  return { pillarIdx, overallIndexPre, overallScalePre, afterGatesScale, finalScale, finalIndex, gates, caps };
+  return { perParam: comp, byPillar, overallIndexPre, overallScalePre, afterGatesScale, finalScale, finalIndex, gates, caps };
 }
-
 function renderGateCaps(gates,caps){
-  const box = document.getElementById("gateList"); box.innerHTML="";
+  const box=document.getElementById("gateList"); box.innerHTML="";
   gates.forEach(g=>{
     const row=document.createElement("div"); row.className="pillar-card";
-    const state = g.missing ? "score-bad" : (g.pass ? "score-good" : "score-bad");
+    const cls = g.pass?"score-good":"score-bad";
     row.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
-      <div>${g.label}</div><span class="score-badge ${state}">${g.missing?"Missing":"".concat(g.pass?"PASS":"FAIL")}</span></div>`;
+      <div>${g.label}</div><span class="score-badge ${cls}">${g.pass?"PASS":"FAIL"}</span></div>`;
     box.appendChild(row);
   });
   const sep=document.createElement("div"); sep.className="tiny"; sep.style.marginTop="8px"; sep.textContent="Caps";
@@ -1015,49 +1228,28 @@ function renderGateCaps(gates,caps){
     box.appendChild(row);
   });
 }
-function renderPillars(pillarIdx){
+function renderBreakdown(byPillar){
   const cont=document.getElementById("pillarBreakdown"); cont.innerHTML="";
   Object.keys(MODEL.weights).forEach(p=>{
-    const idx=pillarIdx[p]; const scl=indexToScale(idx);
-    const pct=idx==null?0:Math.max(0,Math.min(100,idx));
-    const state = scl==null?"" : (scl>=4?"score-good":scl>=3?"score-warn":"score-bad");
+    const idx = byPillar[p];
+    if(idx==null) return;
+    const scl = indexToScale(idx);
+    const pct = Math.max(0,Math.min(100,idx));
+    const state = scl>=4?"score-good":(scl>=3?"score-warn":"score-bad");
     const card=document.createElement("div"); card.className="pillar-card";
-    card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
-      <div style="display:flex;gap:8px;align-items:baseline"><strong>${p}</strong><span class="pill">Weight: ${MODEL.weights[p]}</span></div>
-      <span class="score-badge ${state}">${fmt(scl,1)}</span></div>
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex; gap:8px; align-items:baseline">
+          <strong>${p}</strong><span class="pill">Weight: ${MODEL.weights[p]}</span>
+        </div>
+        <span class="score-badge ${state}">${fmt(scl,1)}</span>
+      </div>
       <div class="progress" style="margin-top:8px"><div class="bar" style="width:${pct}%"></div></div>
-      <div class="tiny">Index: ${fmt(idx,1)}</div>`;
+      <div class="tiny">Index: ${fmt(idx,1)}</div>
+    `;
     cont.appendChild(card);
   });
 }
-
-/* ========================= EVENTS ========================= */
-function attachHandlers(){
-  formArea.addEventListener("change", e=>{
-    const t=e.target;
-    if(t.matches('[data-na="1"]')){
-      const ctrl = t.closest(".row").querySelector('[data-param][data-index]:not([data-na])');
-      if(ctrl){ ctrl.disabled = t.checked; }
-    }
-    compute();
-  });
-}
-document.getElementById("btnCompute").addEventListener("click", ()=>compute());
-document.getElementById("btnSave").addEventListener("click", saveAll);
-document.getElementById("btnLoad").addEventListener("click", loadAll);
-document.getElementById("btnReset").addEventListener("click", resetAll);
-document.getElementById("btnExport").addEventListener("click", ()=>{
-  const payload = { module:currentModule, ts:new Date().toISOString(), selections:getSaved(), results:compute(true) };
-  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
-  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`oemm_${currentModule}_${Date.now()}.json`;
-  a.click(); URL.revokeObjectURL(a.href);
-});
-document.getElementById("btnCore").addEventListener("click", ()=>{
-  currentModule="core"; btnCore.classList.add("active"); btnFull.classList.remove("active"); render();
-});
-document.getElementById("btnFull").addEventListener("click", ()=>{
-  currentModule="full"; btnFull.classList.add("active"); btnCore.classList.remove("active"); render();
-});
 
 /* init */
 render();
