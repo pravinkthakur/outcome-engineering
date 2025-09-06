@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Outcome Engineering Maturity – Checklist Auto-Scoring</title>
+<title>Outcome Engineering Maturity – Mixed Evidence Auto-Scoring</title>
 <style>
   :root{
     --bg:#0f1220;--panel:#14182b;--muted:#9aa4b2;--text:#f7f9ff;
@@ -11,63 +11,48 @@
     --line:#1e2540;--chip:#23294b;
   }
   *{box-sizing:border-box}
-  body{
-    margin:0; font:16px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
-    color:var(--text); background:radial-gradient(60rem 60rem at 10% -10%, #1a1f36, #0b0e19 70%), var(--bg);
-  }
-  header{
-    position:sticky; top:0; z-index:5;
-    background:linear-gradient(180deg, rgba(14,17,30,.9),rgba(14,17,30,.6)), rgba(14,17,30,.6);
-    backdrop-filter: blur(8px);
-    border-bottom:1px solid var(--line);
-  }
-  .wrap{max-width:1200px; margin:0 auto; padding:18px 20px;}
-  .brand{display:flex; align-items:center; gap:12px;}
-  .logo{width:34px; height:34px; border-radius:10px; background:conic-gradient(from 180deg, var(--brand), var(--brand-2)); box-shadow:0 0 0 3px #ffffff0a}
-  h1{margin:0; font-size:20px; letter-spacing:.2px}
-  .sub{color:var(--muted); font-size:13px}
-  main{max-width:1200px; margin:18px auto; padding:0 20px 60px}
-  .card{
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
-    border:1px solid var(--line); border-radius:16px; padding:18px;
-    box-shadow: 0 10px 30px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.03);
-  }
-  .toolbar{display:flex; flex-wrap:wrap; gap:10px; align-items:center}
-  .seg{display:inline-flex; padding:4px; background:var(--chip); border-radius:12px; border:1px solid var(--line);}
-  .seg button{border:0; background:transparent; color:var(--muted); padding:8px 14px; border-radius:8px; cursor:pointer; font-weight:600}
-  .seg button.active{background:var(--brand); color:#fff; box-shadow:0 0 0 2px #ffffff12 inset}
-  .btn{border:1px solid var(--line); background:var(--panel); color:#fff; padding:9px 14px; border-radius:10px; cursor:pointer; font-weight:600}
-  .btn.primary{background:var(--brand); border-color:#5f46d9}
-  .btn.ghost{background:transparent}
-  .btn.warn{background:var(--amber); border-color:#946200; color:#111}
-  .grid{display:grid; gap:14px}
-  @media (min-width:1024px){ .grid-cols-2{grid-template-columns:1fr 1fr} .grid-cols-3{grid-template-columns:1.2fr .8fr} }
-  .pill{display:inline-flex; gap:8px; align-items:center; padding:4px 10px; background:var(--chip); border:1px solid var(--line); border-radius:999px; color:var(--muted); font-size:12px}
+  body{margin:0;font:16px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;color:var(--text);
+    background:radial-gradient(60rem 60rem at 10% -10%,#1a1f36,#0b0e19 70%),var(--bg)}
+  header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,rgba(14,17,30,.9),rgba(14,17,30,.6)),rgba(14,17,30,.6);
+    backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .wrap{max-width:1200px;margin:0 auto;padding:18px 20px}
+  .brand{display:flex;gap:12px;align-items:center}
+  .logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 180deg,var(--brand),var(--brand-2));box-shadow:0 0 0 3px #ffffff0a}
+  h1{margin:0;font-size:20px}
+  .sub{color:var(--muted);font-size:13px}
+  main{max-width:1200px;margin:18px auto;padding:0 20px 60px}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.03)}
+  .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .seg{display:inline-flex;padding:4px;background:var(--chip);border-radius:12px;border:1px solid var(--line)}
+  .seg button{border:0;background:transparent;color:var(--muted);padding:8px 14px;border-radius:8px;cursor:pointer;font-weight:600}
+  .seg button.active{background:var(--brand);color:#fff;box-shadow:0 0 0 2px #ffffff12 inset}
+  .btn{border:1px solid var(--line);background:var(--panel);color:#fff;padding:9px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+  .btn.primary{background:var(--brand);border-color:#5f46d9}
+  .btn.warn{background:var(--amber);border-color:#946200;color:#111}
+  .grid{display:grid;gap:14px}
+  @media (min-width:1024px){ .grid-cols-3{grid-template-columns:1.25fr .75fr} }
+  .pill{display:inline-flex;gap:8px;align-items:center;padding:4px 10px;background:var(--chip);border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:12px}
   .muted{color:var(--muted)}
-  .section{margin-top:22px}
-  .h2{font-size:18px; margin:0 0 8px; letter-spacing:.2px}
-  .h3{font-size:16px; margin:16px 0 4px}
-  .pillar-card{border:1px solid var(--line); border-radius:14px; padding:12px; background:rgba(255,255,255,.02)}
-  .item{border:1px dashed #2b335a; border-radius:12px; padding:12px; background:rgba(255,255,255,.02); margin-top:10px}
-  .item header{display:flex; justify-content:space-between; align-items:center}
-  .score-badge{padding:2px 8px; border-radius:999px; font-weight:700; font-size:12px; border:1px solid var(--line)}
-  .score-good{background:#0f2f1b; color:#7ef39a; border-color:#135d34}
-  .score-warn{background:#2f2a0f; color:#ffd977; border-color:#6b5514}
-  .score-bad{background:#311315; color:#ffa1a9; border-color:#6b262b}
-  .progress{width:100%; height:10px; border-radius:999px; background:#0e1230; border:1px solid var(--line); overflow:hidden}
-  .bar{height:100%; background:linear-gradient(90deg, var(--brand), var(--brand-2)); width:0%}
-  .checks{display:grid; gap:8px}
-  .check{display:flex; gap:10px; align-items:flex-start; padding:8px; border-radius:10px; background:rgba(255,255,255,.02); border:1px solid #21284a}
-  .check input{margin-top:2px}
-  .kpis{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px}
-  @media (min-width:780px){ .kpis{grid-template-columns: repeat(4, minmax(0,1fr));}}
-  .kpi{border:1px solid var(--line); border-radius:14px; padding:14px; background:rgba(255,255,255,.02)}
+  .h2{font-size:18px;margin:0 0 8px}
+  .h3{font-size:16px;margin:16px 0 4px}
+  .pillar-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:rgba(255,255,255,.02)}
+  .item{border:1px dashed #2b335a;border-radius:12px;padding:12px;background:rgba(255,255,255,.02);margin-top:10px}
+  .item header{display:flex;justify-content:space-between;align-items:center}
+  .score-badge{padding:2px 8px;border-radius:999px;font-weight:700;font-size:12px;border:1px solid var(--line)}
+  .score-good{background:#0f2f1b;color:#7ef39a;border-color:#135d34}
+  .score-warn{background:#2f2a0f;color:#ffd977;border-color:#6b5514}
+  .score-bad{background:#311315;color:#ffa1a9;border-color:#6b262b}
+  .progress{width:100%;height:10px;border-radius:999px;background:#0e1230;border:1px solid var(--line);overflow:hidden}
+  .bar{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand-2));width:0%}
+  .checks{display:grid;gap:8px}
+  .row{display:flex;gap:8px;align-items:center}
+  .chip{padding:2px 8px;border-radius:999px;background:#223;color:#aee;border:1px solid #2b395a;font-size:12px}
+  .tiny{font-size:12px;color:var(--muted)}
+  input[type="range"]{width:220px}
+  .na{display:flex;align-items:center;gap:6px;font-size:12px;color:#9fb2ff}
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .kpi{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.02)}
   .kpi strong{font-size:18px}
-  .list{margin:0; padding-left:18px; color:var(--muted); font-size:14px}
-  details{border:1px dashed #2b335a; border-radius:12px; padding:10px 12px}
-  details > summary{cursor:pointer}
-  footer{color:var(--muted); font-size:12px; padding:30px 0 50px; text-align:center}
-  .tiny{font-size:12px; color:var(--muted)}
 </style>
 </head>
 <body>
@@ -75,8 +60,8 @@
   <div class="wrap brand">
     <div class="logo" aria-hidden="true"></div>
     <div>
-      <h1>Outcome Engineering Maturity – Auto-Scoring</h1>
-      <div class="sub">Checkbox evidence → Parameter compliance → Pillar & Overall scores (non-linear) + Gates & Caps</div>
+      <h1>Outcome Engineering Maturity – Mixed Evidence Auto-Scoring</h1>
+      <div class="sub">Checkboxes + Scales • Variable weights • N/A normalization • Gates & Caps</div>
     </div>
   </div>
 </header>
@@ -84,25 +69,25 @@
 <main class="grid grid-cols-3">
   <section class="card">
     <div class="toolbar">
-      <div class="seg" role="tablist" aria-label="Module selector">
-        <button id="btnCore" class="active" role="tab" aria-selected="true">Core 24</button>
-        <button id="btnFull" role="tab" aria-selected="false">Full 12 Pillars</button>
+      <div class="seg" role="tablist">
+        <button id="btnCore" class="active" aria-selected="true">Core 24</button>
+        <button id="btnFull" aria-selected="false">Full 12 Pillars</button>
       </div>
       <button class="btn primary" id="btnCompute">Compute</button>
       <button class="btn" id="btnSave">Save</button>
-      <button class="btn ghost" id="btnLoad">Load</button>
+      <button class="btn" id="btnLoad">Load</button>
       <button class="btn warn" id="btnReset">Reset</button>
       <button class="btn" id="btnExport">Export JSON</button>
     </div>
 
     <div class="section">
-      <h2 class="h2">Instructions</h2>
-      <ul class="list">
-        <li>Choose <b>Core 24</b> or <b>Full 12 Pillars</b>.</li>
-        <li>Tick each evidence checkbox you comply with. Weights auto-compute compliance.</li>
-        <li>Click <b>Compute</b> (or change any checkbox) to update scores, gates & caps.</li>
-      </ul>
-      <div class="tiny">Scale mapping: 0–25→1..2, 25–50→2..3, 50–80→3..4, 80–100→4..5.</div>
+      <h2 class="h2">How scoring works</h2>
+      <div class="tiny">
+        Each sub-item contributes with its own <b>weight</b>. Types:
+        <span class="chip">check</span> = 0/1, <span class="chip">scale (0–5)</span> = value/5, <span class="chip">percent (0–100%)</span> = value/100.
+        <br/>Parameter compliance = Σ(weight × value) / Σ(weights of non-N/A items).
+        We map the parameter index to scale 1–5 via a non-linear curve (0–25→1..2, 25–50→2..3, 50–80→3..4, 80–100→4..5).
+      </div>
     </div>
 
     <div id="formArea" class="section"></div>
@@ -110,7 +95,7 @@
 
   <aside class="card">
     <h2 class="h2">Results</h2>
-    <div class="kpis" id="kpis">
+    <div class="kpis">
       <div class="kpi"><div class="muted">Overall (index 0–100)</div><strong id="overallIndex">—</strong></div>
       <div class="kpi"><div class="muted">Overall (scale 1–5)</div><strong id="overallScale">—</strong></div>
       <div class="kpi"><div class="muted">Band</div><strong id="overallBand">—</strong></div>
@@ -126,30 +111,17 @@
       <h3 class="h3">Pillar breakdown</h3>
       <div id="pillarBreakdown" class="grid"></div>
     </div>
-
-    <div class="section">
-      <details>
-        <summary><b>Scoring model</b></summary>
-        <div class="tiny" style="margin-top:8px">
-          Parameter compliance = sum(weights of checked items). Index = compliance (0–100).<br/>
-          Pillar = average of parameter indices. Overall = weighted by pillar weights.<br/>
-          If any gate fails, overall ≤ 3. Caps: Lead time/Release &lt;3 ⇒ ≤2.4; Proximity ≤2 ⇒ ≤2.9; Traceability ≤2 ⇒ ≤3.0.
-        </div>
-      </details>
-    </div>
   </aside>
 </main>
 
-<footer>
-  v1.0 — Static, client-side only. Data persists to your browser (LocalStorage). No external dependencies.
-</footer>
+<footer>v2.0 • Mixed input types, variable weights, N/A & auto-normalization • LocalStorage only</footer>
 
 <script>
-/* ==========================================================
-   MODEL (activity/artifact checklists with weights)
-   ========================================================== */
+/* ========================= MODEL ========================= */
+/* NOTE: weights now vary; some sub-items are scales.
+   If a check has no explicit weight profile (legacy = all 12.5),
+   we auto-apply a tapered profile so items aren’t equal. */
 const MODEL = {
-  version: "OEMM-activity-artifact-v1.0",
   weights: {
     "Strategy & Executive Alignment": 8,
     "Customer & Outcome Alignment": 12,
@@ -204,505 +176,558 @@ const MODEL = {
       { name:"Data & AI Lifecycle", parameters:["data.data_sla_lineage","data.model_lifecycle","data.responsible_ai","data.analytics_selfserve"] },
       { name:"Experience Quality & Market Readiness", parameters:["xp.perf_budgets_rum","xp.accessibility","xp.i18n_l10n","xp.support_integration"] }
     ],
+    /* PARAMETER DEFINITIONS
+       - type: "check" | "scale5" | "scale100"
+       - w: weight (0..100, will be normalized if totals ≠100 or items marked N/A)
+       If some items lack explicit w, we apply tapered defaults to avoid equal weights. */
     parameters: {
-      /* ---------- CORE 24: 8 checks each ---------- */
-      "strat.okr_link": { label:"Strategy → OKR linkage", checks:[
-        {w:12.5,label:"Strategy tree documented, versioned, and published"},
-        {w:12.5,label:"≥80% squads have OKRs with owners and target dates"},
-        {w:12.5,label:"OKR quality rubric score ≥ 3/5 per squad"},
-        {w:12.5,label:"Quarterly OKR reviews completed with minutes"},
-        {w:12.5,label:"Each KR links to instrumented metric (dashboard)"},
-        {w:12.5,label:"Dependencies mapped; cross-team alignment documented"},
-        {w:12.5,label:"Outcome deltas recorded post-quarter (green/red + notes)"},
-        {w:12.5,label:"OKR registry searchable (tags: product/capability)"}
-      ]},
-      "strat.portfolio_review": { label:"Portfolio bet review", checks:[
-        {w:12.5,label:"Quarterly portfolio review held (agenda & minutes)"},
-        {w:12.5,label:"Bets framed with expected KPI uplift ranges"},
-        {w:12.5,label:"Evidence pack template used (experiments, SLO, cost)"},
-        {w:12.5,label:"% budget reallocated based on evidence reported"},
-        {w:12.5,label:"Kill/continue decisions logged with rationale"},
-        {w:12.5,label:"Risks/assumptions register updated per bet"},
-        {w:12.5,label:"Scenario analysis documented for top bets"},
-        {w:12.5,label:"Portfolio dashboard visible org-wide"}
-      ]},
-      "cust.proximity": { label:"Customer proximity", checks:[
-        {w:12.5,label:"Engineer–customer hours tracked per person/quarter"},
-        {w:12.5,label:"Engineers join discovery/shadow sessions"},
-        {w:12.5,label:"Notes captured and linked to backlog items"},
-        {w:12.5,label:"Quarterly pipeline of customer sessions planned"},
-        {w:12.5,label:"Eng joins post-release sessions or support ride-alongs"},
-        {w:12.5,label:"Session recordings accessible to squad"},
-        {w:12.5,label:"Finding → change linkage logged (ticket/PR reference)"},
-        {w:12.5,label:"Quarterly roll-up: top insights and actions"}
-      ]},
-      "cust.outcome_trace": { label:"Outcome traceability (PR → Feature → Event → KPI)", checks:[
-        {w:12.5,label:"Event schema template required in PRs (owner, fields, KPI)"},
-        {w:12.5,label:"Deploy SHA joined to event stream"},
-        {w:12.5,label:"Feature flag/experiment ID linked to PR"},
-        {w:12.5,label:"KPI chart linked in PR/ticket"},
-        {w:12.5,label:"Automated lineage view exists"},
-        {w:12.5,label:"Coverage % tracked for last 90 days"},
-        {w:12.5,label:"Attribution notes: expected vs actual KPI delta"},
-        {w:12.5,label:"Data quality checks on events with owner alerts"}
-      ]},
-      "prod.discovery": { label:"Discovery & experiments", checks:[
-        {w:12.5,label:"Experiment template with hypothesis, metrics, MDE"},
-        {w:12.5,label:"Decision log links outcomes to experiments"},
-        {w:12.5,label:"Interview schedule & participant sourcing documented"},
-        {w:12.5,label:"Guardrail metrics defined for all tests"},
-        {w:12.5,label:"A/B or cohort platform with audit trail"},
-        {w:12.5,label:"Median time-to-insight ≤ 14 days tracked"},
-        {w:12.5,label:"Quarterly kill-rate reported"},
-        {w:12.5,label:"Opportunity solution trees up to date"}
-      ]},
-      "prod.gtm_readiness": { label:"Go-to-market readiness", checks:[
-        {w:12.5,label:"Launch playbook approved (roles, risks, timeline)"},
-        {w:12.5,label:"Customer cohorting plan & ramp schedule"},
-        {w:12.5,label:"Enablement docs, demo, internal training delivered"},
-        {w:12.5,label:"Support runbook updated; ticket taxonomy ready"},
-        {w:12.5,label:"Pricing/packaging considered with telemetry"},
-        {w:12.5,label:"Readiness gates passed (UAT, perf, security)"},
-        {w:12.5,label:"Rollback/comms plan rehearsed"},
-        {w:12.5,label:"Post-launch metrics owner & schedule set"}
-      ]},
-      "arch.obs_by_design": { label:"Observability by design", checks:[
-        {w:12.5,label:"Golden signals documented per service"},
-        {w:12.5,label:"SLOs defined in code/config"},
-        {w:12.5,label:"Tracing on critical paths"},
-        {w:12.5,label:"Logs/metrics/traces correlated (traceID)"},
-        {w:12.5,label:"Dashboards used in on-call and planning"},
-        {w:12.5,label:"Alert runbooks linked to dashboards"},
-        {w:12.5,label:"Telemetry coverage reported"},
-        {w:12.5,label:"Synthetic checks or RUM as relevant"}
-      ]},
-      "arch.api_product": { label:"API productisation", checks:[
-        {w:12.5,label:"OpenAPI/IDL present & versioned"},
-        {w:12.5,label:"Contract tests in CI"},
-        {w:12.5,label:"SLAs/SLOs defined"},
-        {w:12.5,label:"API portal entry with docs/examples"},
-        {w:12.5,label:"SDKs/client libraries maintained"},
-        {w:12.5,label:"Usage analytics dashboard"},
-        {w:12.5,label:"Quota/auth policies enforced"},
-        {w:12.5,label:"Onboarding time ≤ target evidenced"}
+      /* ---- a few examples updated with mixed types & varied weights ---- */
+      "deliv.lead_time": { label:"Lead time for change", checks:[
+        {type:"check",  w:18, label:"DORA/VCS export available (last 90 days)"},
+        {type:"scale5", w:22, label:"P95 lead time (0=weeks, 5=≤1 day)", help:"0=≥20d, 2=~10d, 3=~5d, 4=~2d, 5=≤1d"},
+        {type:"check",  w:14, label:"WIP limits enforced on boards"},
+        {type:"check",  w:12, label:"Blocker ageing alerts (bot)"},
+        {type:"check",  w:10, label:"Small PR policy in place"},
+        {type:"check",  w:8,  label:"Pair/mob or PR-buddy rotation"},
+        {type:"check",  w:8,  label:"Trunk-based/short-lived branches"},
+        {type:"check",  w:8,  label:"Weekly review of slowest 10% PRs"}
       ]},
       "eng.test_strategy": { label:"Test strategy", checks:[
-        {w:12.5,label:"Test pyramid ratios documented"},
-        {w:12.5,label:"CI enforces min test gates"},
-        {w:12.5,label:"Contract tests between services"},
-        {w:12.5,label:"Test data mgmt (synthetic/anonymised)"},
-        {w:12.5,label:"Flake tracking & quarantine"},
-        {w:12.5,label:"Performance tests on critical paths"},
-        {w:12.5,label:"AI-assisted or mutation testing used"},
-        {w:12.5,label:"Median CI feedback ≤ 10 min"}
-      ]},
-      "eng.cicd": { label:"CI/CD maturity", checks:[
-        {w:12.5,label:"Pipeline as code with reviews"},
-        {w:12.5,label:"Automated deploy to prod/staging"},
-        {w:12.5,label:"Post-deploy verification (smoke/health/KPIs)"},
-        {w:12.5,label:"Feature flags supported"},
-        {w:12.5,label:"Canary/blue-green available"},
-        {w:12.5,label:"Automated rollback hook"},
-        {w:12.5,label:"Deployment frequency tracked"},
-        {w:12.5,label:"Change failure rate tracked"}
-      ]},
-      "eng.iac_gitops": { label:"IaC & GitOps", checks:[
-        {w:12.5,label:"Infra provisioned via code"},
-        {w:12.5,label:"Infra changes via PR only"},
-        {w:12.5,label:"GitOps controller & drift detection"},
-        {w:12.5,label:"Policy as code with audit"},
-        {w:12.5,label:"Secrets management integrated & scanned"},
-        {w:12.5,label:"Ephemeral envs via PR"},
-        {w:12.5,label:"Infra cost tags enforced"},
-        {w:12.5,label:"Drift incidents tracked with MTTR"}
-      ]},
-      "eng.cloud_enable": { label:"Cloud & stack enablement", checks:[
-        {w:12.5,label:"Paved path templates (service/worker/job/UI)"},
-        {w:12.5,label:"Managed services catalogue"},
-        {w:12.5,label:"Golden path docs with SLA"},
-        {w:12.5,label:"Per-squad infra control with guardrails"},
-        {w:12.5,label:"Standard telemetry baked into templates"},
-        {w:12.5,label:"PR preview envs with URLs"},
-        {w:12.5,label:"Adoption metrics published"},
-        {w:12.5,label:"Legacy stack decommission rules"}
-      ]},
-      "deliv.lead_time": { label:"Lead time for change", checks:[
-        {w:12.5,label:"DORA/VCS export last 90 days"},
-        {w:12.5,label:"P95 lead time chart per service"},
-        {w:12.5,label:"WIP limits enforced"},
-        {w:12.5,label:"Blocker ageing alerts"},
-        {w:12.5,label:"Small PR policy"},
-        {w:12.5,label:"Pair/mob or PR-buddy rotation"},
-        {w:12.5,label:"Trunk-based/short-lived branches"},
-        {w:12.5,label:"Weekly review of slowest PRs"}
-      ]},
-      "deliv.release_safety": { label:"Release cadence & safety", checks:[
-        {w:12.5,label:"Feature flags in production"},
-        {w:12.5,label:"Canary with automated health gates"},
-        {w:12.5,label:"Rollback rehearsal ≤ 15 min"},
-        {w:12.5,label:"Blast radius control (cohorting/%)"},
-        {w:12.5,label:"Deployment frequency targets"},
-        {w:12.5,label:"Release freeze rules tied to SLO burn"},
-        {w:12.5,label:"CAB equivalence pack (if regulated)"},
-        {w:12.5,label:"Post-release KPI check ≤ 24h"}
-      ]},
-      "deliv.flow_efficiency": { label:"Flow efficiency & WIP", checks:[
-        {w:12.5,label:"Value stream map maintained"},
-        {w:12.5,label:"Flow efficiency tracked"},
-        {w:12.5,label:"Constraint register with owners"},
-        {w:12.5,label:"Auto-flags for blocked >24h"},
-        {w:12.5,label:"Swimlanes & policies for expedite"},
-        {w:12.5,label:"Arrival/departure rate dashboard"},
-        {w:12.5,label:"Queue age visualised"},
-        {w:12.5,label:"Monthly Kaizen on top constraint"}
+        {type:"check",  w:18, label:"Test pyramid ratios documented"},
+        {type:"check",  w:16, label:"CI enforces min test gates"},
+        {type:"check",  w:12, label:"Contract tests between services"},
+        {type:"check",  w:10, label:"Test data mgmt (synthetic/anonymised)"},
+        {type:"check",  w:10, label:"Flake tracking & quarantine"},
+        {type:"check",  w:10, label:"Performance tests on critical paths"},
+        {type:"check",  w:8,  label:"AI-assisted or mutation testing used"},
+        {type:"scale5", w:16, label:"Median CI feedback time (0=60m+, 5=≤10m)", help:"0=≥60m,1=~45m,2=~30m,3=~20m,4=~15m,5=≤10m"}
       ]},
       "reliab.mttr_budget": { label:"MTTR & error budgets", checks:[
-        {w:12.5,label:"Error budgets defined per service"},
-        {w:12.5,label:"Budget burn dashboard live"},
-        {w:12.5,label:"Budget policy (throttle/gate) documented"},
-        {w:12.5,label:"≥2 policy activations last quarter"},
-        {w:12.5,label:"Incident playbooks link to budget"},
-        {w:12.5,label:"MTTR tracked P50/P90/P95"},
-        {w:12.5,label:"Auto-page/auto-ticket wired"},
-        {w:12.5,label:"Budget breaches reviewed in planning"}
+        {type:"check",  w:16, label:"Error budgets defined per service"},
+        {type:"check",  w:14, label:"Budget burn dashboard live"},
+        {type:"check",  w:12, label:"Budget policy (throttle/gate) documented"},
+        {type:"check",  w:14, label:"≥2 policy activations last quarter"},
+        {type:"scale5", w:22, label:"Incident MTTR (0=days, 5=≤15m)", help:"0=≥2d,2=~8h,3=~2h,4=~45m,5=≤15m"},
+        {type:"check",  w:8,  label:"Auto-page/auto-ticket wired"},
+        {type:"check",  w:8,  label:"Budget breaches reviewed in planning"},
+        {type:"check",  w:6,  label:"Playbooks link to budget view"}
       ]},
       "reliab.slos_product": { label:"SLOs & product impact", checks:[
-        {w:12.5,label:"SLOs defined (latency/errors/availability)"},
-        {w:12.5,label:"SLOs declared in code/config"},
-        {w:12.5,label:"Joint view: SLO × cost × KPI"},
-        {w:12.5,label:"Error budget ties to release gating"},
-        {w:12.5,label:"Customer impact quantified"},
-        {w:12.5,label:"Runbooks link from SLO alerts"},
-        {w:12.5,label:"SLO reviews in PM & on-call rituals"},
-        {w:12.5,label:"SLO coverage % reported"}
+        {type:"check",   w:16, label:"SLOs defined (latency/errors/availability)"},
+        {type:"check",   w:14, label:"SLOs declared in code/config"},
+        {type:"check",   w:14, label:"Error budget ties to release gating"},
+        {type:"check",   w:12, label:"Customer impact quantified (revenue at risk)"},
+        {type:"check",   w:10, label:"Runbooks link from SLO alerts"},
+        {type:"check",   w:10, label:"SLO reviews in PM & on-call rituals"},
+        {type:"scale100",w:24, label:"SLO coverage (%) across services", help:"Set % coverage (0–100)"}
       ]},
-      "sec.secure_coding": { label:"Secure coding & supply chain", checks:[
-        {w:12.5,label:"SAST/DAST in CI with pass/fail gates"},
-        {w:12.5,label:"Dependency scanning & license policy"},
-        {w:12.5,label:"SBOM generated & stored per build"},
-        {w:12.5,label:"Signed builds/provenance (e.g., SLSA)"},
-        {w:12.5,label:"Secrets scanners in CI/repos"},
-        {w:12.5,label:"Threat models maintained"},
-        {w:12.5,label:"Security training completion ≥ threshold"},
-        {w:12.5,label:"Vuln SLA tracking & exceptions"}
+      "cust.proximity": { label:"Customer proximity", checks:[
+        {type:"scale5",  w:28, label:"Engineer–customer hours/pp/quarter (0=0h, 5=≥8h)"},
+        {type:"check",   w:16, label:"Engineers join discovery/shadow sessions"},
+        {type:"check",   w:12, label:"Notes linked to backlog items"},
+        {type:"check",   w:12, label:"Quarterly pipeline of sessions planned"},
+        {type:"check",   w:10, label:"Post-release sessions / support ride-alongs"},
+        {type:"check",   w:8,  label:"Recordings accessible to squad"},
+        {type:"check",   w:7,  label:"Finding→change linkage logged"},
+        {type:"check",   w:7,  label:"Quarterly roll-up of insights & actions"}
       ]},
-      "docs.adrs_quality": { label:"ADRs & decision quality", checks:[
-        {w:12.5,label:"ADR template with IDs & owners"},
-        {w:12.5,label:"Decision latency tracked"},
-        {w:12.5,label:"Reversal decisions recorded with outcomes"},
-        {w:12.5,label:"ADRs link to expected impact metrics"},
-        {w:12.5,label:"Periodic decision quality review"},
-        {w:12.5,label:"Discoverable/indexed ADRs"},
-        {w:12.5,label:"Cross-team visibility (digest/newsletter)"},
-        {w:12.5,label:"Deprecated ADRs mark successors"}
+      "cust.outcome_trace": { label:"Outcome traceability (PR→Feature→Event→KPI)", checks:[
+        {type:"check",   w:16, label:"Event schema in PRs (owner, fields, KPI)"},
+        {type:"check",   w:14, label:"Deploy SHA joined to event stream"},
+        {type:"check",   w:12, label:"Flag/experiment ID linked to PR"},
+        {type:"check",   w:12, label:"KPI chart linked in PR/ticket"},
+        {type:"check",   w:12, label:"Automated lineage view exists"},
+        {type:"scale100",w:22, label:"Lineage coverage (%) last 90 days", help:"% merged PRs with lineage"},
+        {type:"check",   w:7,  label:"Attribution notes: expected vs actual delta"},
+        {type:"check",   w:5,  label:"Event data quality checks & alerts"}
       ]},
-      "org.team_autonomy": { label:"Team autonomy & ownership", checks:[
-        {w:12.5,label:"Decision rights matrix (RACI)"},
-        {w:12.5,label:"Squad owns on-call & incident actions"},
-        {w:12.5,label:"Squad owns service catalogue entries"},
-        {w:12.5,label:"Access to infra controls with guardrails"},
-        {w:12.5,label:"Low-risk changes approved in squad"},
-        {w:12.5,label:"Autonomy score surveyed quarterly"},
-        {w:12.5,label:"Escalation paths documented"},
-        {w:12.5,label:"Ops cost prompts in planning"}
+      "eng.cicd": { label:"CI/CD maturity", checks:[
+        {type:"check",  w:16, label:"Pipeline as code with reviews"},
+        {type:"check",  w:16, label:"Automated deploy to prod/staging"},
+        {type:"check",  w:14, label:"Post-deploy verification (smoke/health/KPIs)"},
+        {type:"check",  w:12, label:"Feature flags supported"},
+        {type:"check",  w:10, label:"Canary/blue-green available"},
+        {type:"check",  w:10, label:"Automated rollback hook"},
+        {type:"scale5", w:12, label:"Deployment frequency (0=monthly, 5=hourly)"},
+        {type:"scale5", w:10, label:"Change failure rate (5=≤5%)", help:"Invert: 0=≥40%, 2=~25%, 3=~15%, 4=~8%, 5=≤5%"}
       ]},
       "econ.cost_to_serve": { label:"Cost-to-serve visibility", checks:[
-        {w:12.5,label:"Tagging standards for cost (service/env/feature)"},
-        {w:12.5,label:"Dashboard: cost per request / segment"},
-        {w:12.5,label:"Allocation method documented"},
-        {w:12.5,label:"Trends vs SLO compliance visible"},
-        {w:12.5,label:"Alerts on anomaly spikes"},
-        {w:12.5,label:"Monthly review in squad & product"},
-        {w:12.5,label:"Data export (CSV/API) available"},
-        {w:12.5,label:"Accuracy spot-checks performed"}
+        {type:"check",   w:18, label:"Tagging standards implemented"},
+        {type:"check",   w:14, label:"Dashboard: cost per request/segment"},
+        {type:"check",   w:12, label:"Allocation method documented"},
+        {type:"check",   w:12, label:"Trends vs SLO compliance"},
+        {type:"check",   w:10, label:"Alerts on anomaly spikes"},
+        {type:"check",   w:10, label:"Monthly review in squad & product"},
+        {type:"scale100",w:14, label:"Tagging coverage (%)", help:"% resources with correct tags"},
+        {type:"check",   w:10, label:"Accuracy spot-checks performed"}
+      ]},
+      /* ---- the rest reuse the prior lists; types/weights will be auto-profiled ---- */
+      "strat.okr_link": { label:"Strategy → OKR linkage", checks:[
+        {label:"Strategy tree documented, versioned, published"},
+        {label:"≥80% squads have OKRs with owners & dates"},
+        {label:"OKR quality rubric ≥ 3/5 per squad"},
+        {label:"Quarterly OKR reviews with minutes"},
+        {label:"Each KR links to instrumented metric"},
+        {label:"Dependencies mapped; cross-team alignment"},
+        {label:"Outcome deltas recorded post-quarter"},
+        {label:"OKR registry searchable (tags)"}
+      ]},
+      "strat.portfolio_review": { label:"Portfolio bet review", checks:[
+        {label:"Quarterly portfolio review held"},
+        {label:"Bets framed with expected KPI uplift ranges"},
+        {label:"Evidence pack template used"},
+        {label:"% budget reallocated based on evidence"},
+        {label:"Kill/continue decisions logged"},
+        {label:"Risks/assumptions register updated"},
+        {label:"Scenario analysis for top bets"},
+        {label:"Portfolio dashboard org-visible"}
+      ]},
+      "arch.obs_by_design": { label:"Observability by design", checks:[
+        {label:"Golden signals selected per service"},
+        {label:"SLOs defined in code/config"},
+        {label:"Tracing enabled on critical paths"},
+        {label:"Logs/metrics/traces correlation (traceID)"},
+        {label:"Dashboards reviewed in on-call & planning"},
+        {label:"Alert runbooks linked"},
+        {label:"Telemetry coverage reported"},
+        {label:"Synthetic checks or RUM enabled"}
+      ]},
+      "arch.api_product": { label:"API productisation", checks:[
+        {label:"OpenAPI/IDL present and versioned"},
+        {label:"Contract tests in CI"},
+        {label:"SLAs/SLOs defined"},
+        {label:"API portal with docs/examples"},
+        {label:"SDKs/client libraries maintained"},
+        {label:"Usage analytics dashboard"},
+        {label:"Quota/auth policies enforced"},
+        {label:"Onboarding time ≤ target evidenced"}
+      ]},
+      "eng.iac_gitops": { label:"IaC & GitOps", checks:[
+        {label:"Infra provisioned via code"},
+        {label:"Infra changes via PR only"},
+        {label:"GitOps controller & drift detection"},
+        {label:"Policy as code with audit"},
+        {label:"Secrets management integrated & scanned"},
+        {label:"Ephemeral envs via PR"},
+        {label:"Infra cost tags enforced"},
+        {label:"Drift incidents tracked with MTTR"}
+      ]},
+      "eng.cloud_enable": { label:"Cloud & stack enablement", checks:[
+        {label:"Paved path templates (service/worker/job/UI)"},
+        {label:"Managed services catalogue"},
+        {label:"Golden path docs with SLA"},
+        {label:"Per-squad infra control with guardrails"},
+        {label:"Standard telemetry baked into templates"},
+        {label:"PR preview envs with URLs"},
+        {label:"Adoption metrics published"},
+        {label:"Legacy stack decommission rules"}
+      ]},
+      "deliv.release_safety": { label:"Release cadence & safety", checks:[
+        {label:"Feature flags in production"},
+        {label:"Canary with automated health gates"},
+        {label:"Rollback rehearsal ≤ 15 min"},
+        {label:"Blast radius control (cohorting/%)"},
+        {label:"Deployment frequency targets"},
+        {label:"Release freeze rules tied to SLO burn"},
+        {label:"CAB equivalence pack (if regulated)"},
+        {label:"Post-release KPI check ≤ 24h"}
+      ]},
+      "deliv.flow_efficiency": { label:"Flow efficiency & WIP", checks:[
+        {label:"Value stream map maintained"},
+        {label:"Flow efficiency metric tracked"},
+        {label:"Constraint register with owners"},
+        {label:"Auto-flags for blocked >24h"},
+        {label:"Swimlanes & policies for expedite"},
+        {label:"Arrival/departure rate dashboard"},
+        {label:"Queue age visualised"},
+        {label:"Monthly Kaizen on top constraint"}
+      ]},
+      "prod.discovery": { label:"Discovery & experiments", checks:[
+        {label:"Experiment template with hypothesis, metrics, MDE"},
+        {label:"Decision log links outcomes to experiments"},
+        {label:"Interview schedule & participant sourcing"},
+        {label:"Guardrail metrics defined"},
+        {label:"A/B or cohort platform with audit trail"},
+        {label:"Median time-to-insight ≤ 14 days"},
+        {label:"Quarterly kill-rate reported"},
+        {label:"Opportunity solution trees up to date"}
+      ]},
+      "prod.gtm_readiness": { label:"Go-to-market readiness", checks:[
+        {label:"Launch playbook approved"},
+        {label:"Cohorting plan & ramp schedule"},
+        {label:"Enablement docs/demo/training"},
+        {label:"Support runbook & taxonomy ready"},
+        {label:"Pricing/packaging with telemetry"},
+        {label:"Readiness gates passed"},
+        {label:"Rollback/comms plan rehearsed"},
+        {label:"Post-launch metrics owner set"}
+      ]},
+      "docs.adrs_quality": { label:"ADRs & decision quality", checks:[
+        {label:"ADR template with IDs & owners"},
+        {label:"Decision latency tracked"},
+        {label:"Reversal decisions recorded"},
+        {label:"ADRs link to expected impact"},
+        {label:"Decision quality review"},
+        {label:"Discoverable/indexed"},
+        {label:"Cross-team visibility"},
+        {label:"Deprecated ADRs mark successors"}
+      ]},
+      "org.team_autonomy": { label:"Team autonomy & ownership", checks:[
+        {label:"Decision rights matrix (RACI)"},
+        {label:"Squad owns on-call & incidents"},
+        {label:"Squad owns service catalogue entries"},
+        {label:"Infra controls with guardrails"},
+        {label:"Low-risk changes approved in squad"},
+        {label:"Autonomy score surveyed"},
+        {label:"Escalation paths documented"},
+        {label:"Ops cost prompts in planning"}
       ]},
       "econ.squad_budget": { label:"Squad budget accountability", checks:[
-        {w:12.5,label:"Budget envelope defined"},
-        {w:12.5,label:"Guardrails (limits/approvals) published"},
-        {w:12.5,label:"Monthly variance tracking & notes"},
-        {w:12.5,label:"Spend vs outcome review (OKR/SLO)"},
-        {w:12.5,label:"Reallocate within envelope allowed"},
-        {w:12.5,label:"Quarterly reconciliation with Finance"},
-        {w:12.5,label:"Cost forecasts in planning"},
-        {w:12.5,label:"Experiment spend tracked"}
+        {label:"Budget envelope defined"},
+        {label:"Guardrails (limits/approvals)"},
+        {label:"Monthly variance tracking"},
+        {label:"Spend vs outcome review"},
+        {label:"Reallocate within envelope"},
+        {label:"Quarterly reconciliation"},
+        {label:"Cost forecasts in planning"},
+        {label:"Experiment spend tracked"}
       ]},
       "data.data_sla_lineage": { label:"Data quality SLAs & lineage", checks:[
-        {w:12.5,label:"Data contracts defined (schema + SLAs)"},
-        {w:12.5,label:"Lineage graph (source→sink→dashboard)"},
-        {w:12.5,label:"Freshness/completeness monitors"},
-        {w:12.5,label:"Breach routing to owners with tickets"},
-        {w:12.5,label:"Backfills automated/scripted"},
-        {w:12.5,label:"Ownership metadata complete"},
-        {w:12.5,label:"Test datasets/sandbox defined"},
-        {w:12.5,label:"Quarterly data review with product"}
+        {label:"Data contracts defined (schema+SLAs)"},
+        {label:"Lineage graph (source→sink→dashboard)"},
+        {label:"Freshness/completeness monitors"},
+        {label:"Breach routing to owners"},
+        {label:"Backfills automated/scripted"},
+        {label:"Ownership metadata complete"},
+        {label:"Test datasets/sandbox defined"},
+        {label:"Quarterly data review with product"}
       ]},
       "xp.perf_budgets_rum": { label:"Performance budgets & RUM", checks:[
-        {w:12.5,label:"Perf budgets per page/flow"},
-        {w:12.5,label:"Budgets enforced in CI"},
-        {w:12.5,label:"RUM instrumented for key pages/APIs"},
-        {w:12.5,label:"Perf dashboards with cohort filters"},
-        {w:12.5,label:"PR perf regression auto-flags"},
-        {w:12.5,label:"Perf SLOs tied to KPIs"},
-        {w:12.5,label:"Synthetic checks for critical flows"},
-        {w:12.5,label:"Perf remediation backlog tracked"}
+        {label:"Perf budgets per page/flow"},
+        {label:"Budgets enforced in CI"},
+        {label:"RUM instrumented on key flows"},
+        {label:"Perf dashboards with cohorts"},
+        {label:"PR perf regression auto-flags"},
+        {label:"Perf SLOs tied to KPIs"},
+        {label:"Synthetic checks for critical flows"},
+        {label:"Perf remediation backlog"}
       ]},
 
-      /* ---------- Remaining full model: 6 checks each ---------- */
+      /* remaining (6-check concise) — auto-profiled */
       "strat.exec_narrative": { label:"Executive single narrative", checks:[
-        {w:20,label:"Narrative doc links customer, tech, finance"},
-        {w:15,label:"Versioned & refreshed quarterly"},
-        {w:20,label:"Referenced in exec reviews/QBRs"},
-        {w:15,label:"KPIs aligned to narrative themes"},
-        {w:15,label:"Accessible to org (searchable)"},
-        {w:15,label:"Feedback loop to update narrative"}
+        {label:"Narrative links customer/tech/finance"},
+        {label:"Versioned & refreshed quarterly"},
+        {label:"Referenced in exec reviews/QBRs"},
+        {label:"KPIs aligned to narrative themes"},
+        {label:"Org-wide accessible/searchable"},
+        {label:"Feedback loop to update"}
       ]},
       "strat.decision_reversible": { label:"Decision cadence & reversibility", checks:[
-        {w:20,label:"ADRs mandatory for key decisions"},
-        {w:15,label:"Decision latency tracked"},
-        {w:15,label:"Reversal protocol defined"},
-        {w:20,label:"Reversal yield measured (improved outcome)"},
-        {w:15,label:"Sunset/stop criteria documented"},
-        {w:15,label:"Periodic retro on major decisions"}
+        {label:"ADRs mandatory for key decisions"},
+        {label:"Decision latency tracked"},
+        {label:"Reversal protocol defined"},
+        {label:"Reversal yield measured"},
+        {label:"Sunset/stop criteria documented"},
+        {label:"Periodic retro on major decisions"}
       ]},
       "cust.kpi_literacy": { label:"KPI literacy", checks:[
-        {w:20,label:"KPI registry with owners & formulas"},
-        {w:15,label:"Squad KPI quiz ≥ threshold"},
-        {w:20,label:"Work items link to target KPI"},
-        {w:15,label:"KPI dashboards in rituals"},
-        {w:15,label:"Pre-release KPI forecast captured"},
-        {w:15,label:"Post-release delta reviewed"}
+        {label:"KPI registry with owners & formulas"},
+        {label:"Squad KPI quiz ≥ threshold"},
+        {label:"Work items link to target KPI"},
+        {label:"KPI dashboards in rituals"},
+        {label:"Pre-release KPI forecast captured"},
+        {label:"Post-release delta reviewed"}
       ]},
       "cust.problem_framing": { label:"Problem framing", checks:[
-        {w:20,label:"Opportunity solution tree maintained"},
-        {w:15,label:"Assumptions log with tests"},
-        {w:20,label:"Impact sizing (ranges) documented"},
-        {w:15,label:"Customer evidence attached"},
-        {w:15,label:"Alternatives compared"},
-        {w:15,label:"Triad-approved problem statement"}
+        {label:"Opportunity solution tree maintained"},
+        {label:"Assumptions log with tests"},
+        {label:"Impact sizing documented"},
+        {label:"Customer evidence attached"},
+        {label:"Alternatives compared"},
+        {label:"Triad-approved problem statement"}
       ]},
       "prod.prioritisation": { label:"Prioritisation method", checks:[
-        {w:20,label:"Impact/risk/confidence/TTV scored"},
-        {w:15,label:"Option value or sequencing captured"},
-        {w:15,label:"Assumptions & ranges explicit"},
-        {w:20,label:"Result ties to strategy/OKRs"},
-        {w:15,label:"Periodic re-prioritisation"},
-        {w:15,label:"Decision log linked"}
+        {label:"Impact/risk/confidence/TTV scored"},
+        {label:"Option value/sequencing captured"},
+        {label:"Assumptions & ranges explicit"},
+        {label:"Ties to strategy/OKRs"},
+        {label:"Periodic re-prioritisation"},
+        {label:"Decision log linked"}
       ]},
       "prod.roadmapping": { label:"Roadmapping", checks:[
-        {w:20,label:"Outcome-based roadmap"},
-        {w:15,label:"Dependencies & risks mapped"},
-        {w:20,label:"Replan cycle ≤ quarterly"},
-        {w:15,label:"Scenario/guardrails defined"},
-        {w:15,label:"Capacity assumptions listed"},
-        {w:15,label:"Public, versioned roadmap"}
+        {label:"Outcome-based roadmap"},
+        {label:"Dependencies & risks mapped"},
+        {label:"Replan cycle ≤ quarterly"},
+        {label:"Scenario/guardrails defined"},
+        {label:"Capacity assumptions listed"},
+        {label:"Public, versioned roadmap"}
       ]},
       "arch.modularity": { label:"Modularity", checks:[
-        {w:20,label:"Domain/capability map defined"},
-        {w:20,label:"Service/module boundaries documented"},
-        {w:15,label:"Ownership per module clear"},
-        {w:15,label:"Change blast radius measured"},
-        {w:15,label:"Dependency graph maintained"},
-        {w:15,label:"Refactoring backlog exists"}
+        {label:"Domain/capability map defined"},
+        {label:"Service/module boundaries documented"},
+        {label:"Ownership per module clear"},
+        {label:"Change blast radius measured"},
+        {label:"Dependency graph maintained"},
+        {label:"Refactoring backlog exists"}
       ]},
       "arch.evolutionary": { label:"Evolutionary architecture", checks:[
-        {w:20,label:"Fitness functions defined"},
-        {w:20,label:"Fitness tests in CI"},
-        {w:15,label:"Architecture runway documented"},
-        {w:15,label:"Policy failures tracked"},
-        {w:15,label:"Refactor budget set"},
-        {w:15,label:"Architecture reviews regular"}
+        {label:"Fitness functions defined"},
+        {label:"Fitness tests in CI"},
+        {label:"Architecture runway documented"},
+        {label:"Policy failures tracked"},
+        {label:"Refactor budget set"},
+        {label:"Architecture reviews regular"}
       ]},
       "eng.code_review_gates": { label:"Code review & gates", checks:[
-        {w:20,label:"Peer review required"},
-        {w:15,label:"Static checks/lint/format enforced"},
-        {w:20,label:"Quality/security gates on PR"},
-        {w:15,label:"AI assist usage guardrailed"},
-        {w:15,label:"Review SLA tracked"},
-        {w:15,label:"Rollback/test evidence in PR"}
+        {label:"Peer review required"},
+        {label:"Static checks/lint/format enforced"},
+        {label:"Quality/security gates on PR"},
+        {label:"AI assist guardrails"},
+        {label:"Review SLA tracked"},
+        {label:"Rollback/test evidence in PR"}
       ]},
       "eng.dev_workflow": { label:"Dev workflow", checks:[
-        {w:20,label:"Dev containers or cloud IDE"},
-        {w:20,label:"PR previews with seeded data"},
-        {w:15,label:"One-command bootstrap"},
-        {w:15,label:"Local/prod parity documented"},
-        {w:15,label:"Toolchain version pinning"},
-        {w:15,label:"Setup time ≤ X minutes"}
+        {label:"Dev containers or cloud IDE"},
+        {label:"PR previews with seeded data"},
+        {label:"One-command bootstrap"},
+        {label:"Local/prod parity documented"},
+        {label:"Toolchain version pinning"},
+        {label:"Setup time ≤ target"}
       ]},
       "deliv.planning_adapt": { label:"Planning cadence & adaptability", checks:[
-        {w:20,label:"Quarterly OKRs set & tracked"},
-        {w:15,label:"Decision records maintained"},
-        {w:20,label:"Weekly evidence review (metrics)"},
-        {w:15,label:"Replan rules documented"},
-        {w:15,label:"Stakeholder comms cadence"},
-        {w:15,label:"Risk/assumption updates"}
+        {label:"Quarterly OKRs set & tracked"},
+        {label:"Decision records maintained"},
+        {label:"Weekly evidence review (metrics)"},
+        {label:"Replan rules documented"},
+        {label:"Stakeholder comms cadence"},
+        {label:"Risk/assumption updates"}
       ]},
       "reliab.incident_mgmt": { label:"Incident management", checks:[
-        {w:20,label:"On-call rota & escalation"},
-        {w:20,label:"Blameless RCA template used"},
-        {w:15,label:"Runbooks per top alerts"},
-        {w:15,label:"Drills/table-tops held"},
-        {w:15,label:"Action items tracked to closure"},
-        {w:15,label:"Incident metrics dashboard"}
+        {label:"On-call rota & escalation"},
+        {label:"Blameless RCA template used"},
+        {label:"Runbooks per top alerts"},
+        {label:"Drills/table-tops held"},
+        {label:"Actions tracked to closure"},
+        {label:"Incident metrics dashboard"}
       ]},
       "reliab.anomaly": { label:"Anomaly detection", checks:[
-        {w:20,label:"Alert thresholds tuned"},
-        {w:20,label:"Change-aware alerting (deploy link)"},
-        {w:15,label:"False positive rate monitored"},
-        {w:15,label:"Context enrichment (runbook/owner)"},
-        {w:15,label:"ML/heuristics evaluated"},
-        {w:15,label:"Alert fatigue reviews"}
+        {label:"Alert thresholds tuned"},
+        {label:"Change-aware alerting (deploy link)"},
+        {label:"False positive rate monitored"},
+        {label:"Context enrichment (runbook/owner)"},
+        {label:"ML/heuristics evaluated"},
+        {label:"Alert fatigue reviews"}
+      ]},
+      "sec.secure_coding": { label:"Secure coding & supply chain", checks:[
+        {label:"SAST/DAST in CI with gates"},
+        {label:"Dependency scanning & license policy"},
+        {label:"SBOM per build stored"},
+        {label:"Signed builds/provenance"},
+        {label:"Secrets scanners in CI/repos"},
+        {label:"Threat models maintained"},
+        {label:"Security training ≥ threshold"},
+        {label:"Vuln SLA tracking & exceptions"}
       ]},
       "sec.privacy_data": { label:"Privacy & data handling", checks:[
-        {w:20,label:"Data maps & lawful basis recorded"},
-        {w:20,label:"PII tracing by flow"},
-        {w:15,label:"Retention/deletion jobs automated"},
-        {w:15,label:"Consent checks enforced"},
-        {w:15,label:"DPIAs completed & stored"},
-        {w:15,label:"Privacy incident runbook"}
+        {label:"Data maps & lawful basis recorded"},
+        {label:"PII tracing by flow"},
+        {label:"Retention/deletion jobs automated"},
+        {label:"Consent checks enforced"},
+        {label:"DPIAs completed & stored"},
+        {label:"Privacy incident runbook"}
       ]},
       "sec.compliance_evidence": { label:"Compliance evidence", checks:[
-        {w:20,label:"Controls mapped to ISO/SOC"},
-        {w:20,label:"Evidence as code (pipeline artifacts)"},
-        {w:15,label:"Evidence freshness dashboard"},
-        {w:15,label:"Sampling window defined"},
-        {w:15,label:"Immutable audit trail"},
-        {w:15,label:"Alerts on stale/missing evidence"}
+        {label:"Controls mapped to ISO/SOC"},
+        {label:"Evidence as code (artifacts)"},
+        {label:"Evidence freshness dashboard"},
+        {label:"Sampling window defined"},
+        {label:"Immutable audit trail"},
+        {label:"Alerts on stale/missing evidence"}
       ]},
       "sec.runtime_ir": { label:"Runtime security & IR", checks:[
-        {w:20,label:"SIEM integrated with product"},
-        {w:20,label:"Playbooks & containment steps"},
-        {w:15,label:"MTTD/MTTR security tracked"},
-        {w:15,label:"Drills with KPIs"},
-        {w:15,label:"Forensics capability defined"},
-        {w:15,label:"Post-incident learning captured"}
+        {label:"SIEM integrated with product"},
+        {label:"Playbooks & containment steps"},
+        {label:"MTTD/MTTR security tracked"},
+        {label:"Drills with KPIs"},
+        {label:"Forensics capability defined"},
+        {label:"Post-incident learning captured"}
       ]},
       "docs.code_api_docs": { label:"Code & API docs", checks:[
-        {w:20,label:"Docs as code (in repo)"},
-        {w:20,label:"Freshness checks in CI"},
-        {w:15,label:"Usage analytics"},
-        {w:15,label:"API examples validated"},
-        {w:15,label:"Docs ownership listed"},
-        {w:15,label:"SLA for doc updates"}
+        {label:"Docs as code (in repo)"},
+        {label:"Freshness checks in CI"},
+        {label:"Usage analytics"},
+        {label:"API examples validated"},
+        {label:"Docs ownership listed"},
+        {label:"SLA for doc updates"}
       ]},
       "docs.knowledge_onboarding": { label:"Knowledge sharing & onboarding", checks:[
-        {w:20,label:"Onboarding path with checkpoints"},
-        {w:20,label:"Time to first PR tracked"},
-        {w:15,label:"Recorded walkthroughs"},
-        {w:15,label:"Glossary of systems"},
-        {w:15,label:"Self-serve labs/sandboxes"},
-        {w:15,label:"Feedback loop on path"}
+        {label:"Onboarding path with checkpoints"},
+        {label:"Time to first PR tracked"},
+        {label:"Recorded walkthroughs"},
+        {label:"Glossary of systems"},
+        {label:"Self-serve labs/sandboxes"},
+        {label:"Feedback loop on path"}
       ]},
       "docs.audit_trace": { label:"Audit & traceability", checks:[
-        {w:20,label:"User & system action logging"},
-        {w:20,label:"Searchable within minutes"},
-        {w:15,label:"Tamper-evident storage"},
-        {w:15,label:"Least privilege enforced"},
-        {w:15,label:"Retention policy documented"},
-        {w:15,label:"Access audit reports"}
+        {label:"User & system action logging"},
+        {label:"Searchable within minutes"},
+        {label:"Tamper-evident storage"},
+        {label:"Least privilege enforced"},
+        {label:"Retention policy documented"},
+        {label:"Access audit reports"}
       ]},
       "org.role_triad": { label:"Role clarity & triad", checks:[
-        {w:20,label:"EM/Product/Platform triad named"},
-        {w:20,label:"Decision rights documented"},
-        {w:15,label:"Triad rituals (weekly)"},
-        {w:15,label:"Escalation routes"},
-        {w:15,label:"Role backfills planned"},
-        {w:15,label:"Outcome ownership in goals"}
+        {label:"EM/Product/Platform triad named"},
+        {label:"Decision rights documented"},
+        {label:"Triad rituals (weekly)"},
+        {label:"Escalation routes"},
+        {label:"Role backfills planned"},
+        {label:"Outcome ownership in goals"}
       ]},
       "org.growth_calibration": { label:"Growth & calibration", checks:[
-        {w:20,label:"Lattice with competencies"},
-        {w:20,label:"Evidence-based calibration"},
-        {w:15,label:"Peer/skip calibration"},
-        {w:15,label:"Calibration transparency"},
-        {w:15,label:"Promotion packet template"},
-        {w:15,label:"Calibration cadence defined"}
+        {label:"Lattice with competencies"},
+        {label:"Evidence-based calibration"},
+        {label:"Peer/skip calibration"},
+        {label:"Calibration transparency"},
+        {label:"Promotion packet template"},
+        {label:"Calibration cadence defined"}
       ]},
       "org.leadership_behaviour": { label:"Leadership behaviour", checks:[
-        {w:20,label:"Blocker removal SLA"},
-        {w:20,label:"AMAs/surveys (listening)"},
-        {w:15,label:"Systems thinking training"},
-        {w:15,label:"Outcome-based goals"},
-        {w:15,label:"Recognise learning, not just output"},
-        {w:15,label:"Visible retros/actions"}
+        {label:"Blocker removal SLA"},
+        {label:"AMAs/surveys (listening)"},
+        {label:"Systems thinking training"},
+        {label:"Outcome-based goals"},
+        {label:"Recognise learning (not just output)"},
+        {label:"Visible retros/actions"}
       ]},
       "econ.pricing_levers": { label:"Pricing & value levers", checks:[
-        {w:20,label:"Telemetry inputs (usage, perf, cost)"},
-        {w:20,label:"Pricing experiment framework"},
-        {w:15,label:"Change cycle time measured"},
-        {w:15,label:"Cohort guardrails defined"},
-        {w:15,label:"Packaging ↔ outcomes linked"},
-        {w:15,label:"Revenue impact tracked"}
+        {label:"Telemetry inputs to pricing"},
+        {label:"Pricing experiment framework"},
+        {label:"Change cycle time measured"},
+        {label:"Cohort guardrails defined"},
+        {label:"Packaging linked to outcomes"},
+        {label:"Revenue impact tracking"}
       ]},
       "econ.finops": { label:"FinOps practice", checks:[
-        {w:20,label:"Tagging coverage ≥ threshold"},
-        {w:20,label:"Policy engine (alerts/suggestions)"},
-        {w:15,label:"Savings tracked & attributed"},
-        {w:15,label:"Budget vs forecast dashboards"},
-        {w:15,label:"Rightsizing/RI playbooks"},
-        {w:15,label:"Monthly FinOps review"}
+        {label:"Tagging coverage ≥ threshold"},
+        {label:"Policy engine (alerts/suggestions)"},
+        {label:"Savings tracked & attributed"},
+        {label:"Budget vs forecast dashboards"},
+        {label:"Rightsizing/RI playbooks"},
+        {label:"Monthly FinOps review"}
       ]},
       "data.model_lifecycle": { label:"Model lifecycle & monitoring", checks:[
-        {w:20,label:"Model registry with versions & lineage"},
-        {w:20,label:"Drift/perf monitors with alerts"},
-        {w:15,label:"Rollback/disable automation"},
-        {w:15,label:"Feature store documented"},
-        {w:15,label:"Shadow/canary deploys"},
-        {w:15,label:"Retraining cadence & data SLAs"}
+        {label:"Model registry with versions & lineage"},
+        {label:"Drift/perf monitors with alerts"},
+        {label:"Rollback/disable automation"},
+        {label:"Feature store documented"},
+        {label:"Shadow/canary deploys"},
+        {label:"Retraining cadence & data SLAs"}
       ]},
       "data.responsible_ai": { label:"Responsible AI", checks:[
-        {w:20,label:"Model cards completed"},
-        {w:20,label:"Bias/fairness tests stored"},
-        {w:15,label:"Human-in-the-loop defined"},
-        {w:15,label:"Appeal/override route"},
-        {w:15,label:"PII/consent checks"},
-        {w:15,label:"Audit trail preserved"}
+        {label:"Model cards completed"},
+        {label:"Bias/fairness tests stored"},
+        {label:"Human-in-the-loop defined"},
+        {label:"Appeal/override route"},
+        {label:"PII/consent checks"},
+        {label:"Audit trail preserved"}
       ]},
       "data.analytics_selfserve": { label:"Analytics self-serve", checks:[
-        {w:20,label:"Access control & catalog"},
-        {w:20,label:"Dashboards per squad"},
-        {w:15,label:"Analytics DAU/MAU telemetry"},
-        {w:15,label:"Query templates"},
-        {w:15,label:"Training/how-tos"},
-        {w:15,label:"Query latency SLAs"}
+        {label:"Access control & catalog"},
+        {label:"Dashboards per squad"},
+        {label:"Analytics DAU/MAU telemetry"},
+        {label:"Query templates"},
+        {label:"Training/how-tos"},
+        {label:"Query latency SLAs"}
       ]},
       "xp.accessibility": { label:"Accessibility & inclusion", checks:[
-        {w:20,label:"WCAG targets & audits scheduled"},
-        {w:20,label:"Automated a11y linters in CI"},
-        {w:15,label:"Manual audits on critical flows"},
-        {w:15,label:"Inclusive research participants"},
-        {w:15,label:"A11y debt backlog & SLA"},
-        {w:15,label:"Assistive tech test plan"}
+        {label:"WCAG targets & audits scheduled"},
+        {label:"Automated a11y linters in CI"},
+        {label:"Manual audits on critical flows"},
+        {label:"Inclusive research participants"},
+        {label:"A11y debt backlog & SLA"},
+        {label:"Assistive tech test plan"}
       ]},
       "xp.i18n_l10n": { label:"Internationalisation & localisation", checks:[
-        {w:20,label:"i18n frameworks in code"},
-        {w:20,label:"Locale files & workflows"},
-        {w:15,label:"Currency/timezone handling"},
-        {w:15,label:"Localisation QA process"},
-        {w:15,label:"Market toggles/feature flags"},
-        {w:15,label:"Locale bug rate tracked"}
+        {label:"i18n frameworks in code"},
+        {label:"Locale files & workflows"},
+        {label:"Currency/timezone handling"},
+        {label:"Localisation QA process"},
+        {label:"Market toggles/feature flags"},
+        {label:"Locale bug rate tracked"}
       ]},
       "xp.support_integration": { label:"Support integration", checks:[
-        {w:20,label:"Ticket taxonomy aligns to backlog"},
-        {w:20,label:"Deflection & CSAT shared"},
-        {w:15,label:"Auto-label/route to squads"},
-        {w:15,label:"Support runbooks per issue"},
-        {w:15,label:"Feedback loop into roadmap"},
-        {w:15,label:"Quarterly joint review (CS×Eng)"}
+        {label:"Ticket taxonomy aligns to backlog"},
+        {label:"Deflection & CSAT shared"},
+        {label:"Auto-label/route to squads"},
+        {label:"Support runbooks per issue"},
+        {label:"Feedback loop into roadmap"},
+        {label:"Quarterly CS×Eng review"}
       ]}
     }
   }
 };
 
-/* ==========================================================
-   HELPERS
-   ========================================================== */
-const STORAGE_KEYS = { core:"oemm_core24_check", full:"oemm_full12_check" };
+/* ------- auto-type/weight helpers for legacy items ------- */
+const TAPER8 = [20,15,15,15,10,10,10,5];
+const TAPER6 = [20,20,15,15,15,15];
+function patchModel(){
+  const P = MODEL.fullModel.parameters;
+  for(const pid of Object.keys(P)){
+    const def = P[pid];
+    def.checks.forEach(ch=>{
+      if(!ch.type) ch.type = "check";
+    });
+    // if all weights missing or equal, apply tapered
+    const hasExplicit = def.checks.some(ch=> typeof ch.w === "number");
+    if(!hasExplicit){
+      const n = def.checks.length;
+      let prof = null;
+      if(n===8) prof = TAPER8;
+      else if(n===6) prof = TAPER6;
+      else {
+        // generic decay profile
+        prof = Array.from({length:n},(_,i)=> Math.max(8, Math.round(100 * Math.pow(0.88,i))));
+        const sum = prof.reduce((a,b)=>a+b,0);
+        prof = prof.map(x=> Math.round(100*x/sum));
+        // fix rounding to 100
+        const diff = 100 - prof.reduce((a,b)=>a+b,0);
+        if(diff!==0) prof[0]+=diff;
+      }
+      def.checks.forEach((ch,i)=> ch.w = prof[i] ?? Math.round(100/n));
+    } else {
+      // normalize to ~100
+      const sum = def.checks.reduce((a,ch)=> a+(ch.w||0),0);
+      if(sum>0) def.checks.forEach(ch=> ch.w = +(ch.w*100/sum).toFixed(2));
+    }
+    // heuristics: make some items percent/scale if label hints and no explicit type
+    def.checks.forEach(ch=>{
+      if(ch.type==="check"){
+        const L = (ch.label||"").toLowerCase();
+        if(/coverage|%|tagging coverage|slo coverage|adoption/.test(L)) ch.type="scale100";
+        if(/p95|median|mttr|time to|setup time|frequency|rate/.test(L)) ch.type="scale5";
+      }
+    });
+  }
+}
+patchModel();
+
+/* ========================= UTILITIES ========================= */
+const STORAGE_KEYS = { core:"oemm_core24_mixed", full:"oemm_full12_mixed" };
 const formArea = document.getElementById("formArea");
 const btnCore = document.getElementById("btnCore");
 const btnFull = document.getElementById("btnFull");
-let currentModule = "core"; // "core" | "full"
+let currentModule = "core";
 
 function b64(s){ return btoa(unescape(encodeURIComponent(s))).replace(/=+$/,''); }
-function fmt(n,d=1){ return (n==null || isNaN(n)) ? "—" : (+n).toFixed(d); }
+function fmt(n,d=1){ return (n==null||isNaN(n)) ? "—" : (+n).toFixed(d); }
+function indexToScale(idx){
+  if(idx==null||isNaN(idx)) return null;
+  if(idx<=25) return 1 + (idx/25);
+  if(idx<=50) return 2 + ((idx-25)/25);
+  if(idx<=80) return 3 + ((idx-50)/30);
+  return 4 + ((idx-80)/20);
+}
 function band(scale){
   if(scale==null) return "—";
   if(scale<2) return "Level 1 – Traditional";
@@ -711,47 +736,35 @@ function band(scale){
   if(scale<=4) return "Level 4 – Outcome oriented";
   return "Level 5 – Outcome engineered";
 }
-function indexToScale(idx){
-  if(idx==null || isNaN(idx)) return null;
-  if(idx<=25) return 1 + (idx/25)*(1);
-  if(idx<=50) return 2 + ((idx-25)/25);
-  if(idx<=80) return 3 + ((idx-50)/30);
-  return 4 + ((idx-80)/20);
-}
 
-/* ==========================================================
-   RENDER
-   ========================================================== */
+/* ========================= RENDER ========================= */
 function render(){
-  formArea.innerHTML = "";
+  formArea.innerHTML="";
   if(currentModule==="core") renderCore();
   else renderFull();
-  attachChangeHandlers();
-  compute(); // live compute on initial render
+  attachHandlers();
+  compute();
 }
 function renderCore(){
-  // group core24 params by pillar
   const groups = {};
   MODEL.core24.forEach(pid=>{
     const pillar = MODEL.fullModel.pillars.find(p=>p.parameters.includes(pid)).name;
-    if(!groups[pillar]) groups[pillar]=[];
-    groups[pillar].push(pid);
+    (groups[pillar]=groups[pillar]||[]).push(pid);
   });
   Object.keys(groups).forEach(pillar=>{
     const card = document.createElement("div");
     card.className="pillar-card";
     card.innerHTML = `
       <header style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex; gap:8px; align-items:baseline">
+        <div style="display:flex;gap:8px;align-items:baseline">
           <h3 class="h3">${pillar}</h3>
           <span class="pill">Weight: ${MODEL.weights[pillar]}</span>
         </div>
         <span class="muted">${groups[pillar].length} items</span>
       </header>
-      <div></div>
-    `;
+      <div></div>`;
     const inner = card.lastElementChild;
-    groups[pillar].forEach(pid=> inner.appendChild(renderParam(pillar, pid)));
+    groups[pillar].forEach(pid=> inner.appendChild(renderParam(pillar,pid)));
     formArea.appendChild(card);
   });
 }
@@ -761,202 +774,199 @@ function renderFull(){
     card.className="pillar-card";
     card.innerHTML = `
       <header style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex; gap:8px; align-items:baseline">
+        <div style="display:flex;gap:8px;align-items:baseline">
           <h3 class="h3">${block.name}</h3>
           <span class="pill">Weight: ${MODEL.weights[block.name]}</span>
         </div>
         <span class="muted">${block.parameters.length} items</span>
       </header>
-      <div></div>
-    `;
+      <div></div>`;
     const inner = card.lastElementChild;
-    block.parameters.forEach(pid=> inner.appendChild(renderParam(block.name, pid)));
+    block.parameters.forEach(pid=> inner.appendChild(renderParam(block.name,pid)));
     formArea.appendChild(card);
   });
 }
-function renderParam(pillarName, paramId){
-  const def = MODEL.fullModel.parameters[paramId];
-  const paramKey = b64(paramId);
+function renderParam(pillarName, pid){
+  const def = MODEL.fullModel.parameters[pid];
+  const key = b64(pid);
   const wrap = document.createElement("div");
   wrap.className="item";
   wrap.innerHTML = `
     <header>
       <div>
         <div style="font-weight:700">${def.label}</div>
-        <div class="tiny">${pillarName} • <code style="font-size:11px;color:#9fb2ff">${paramId}</code></div>
+        <div class="tiny">${pillarName} • <code style="font-size:11px;color:#9fb2ff">${pid}</code></div>
       </div>
-      <span class="score-badge" id="badge-${paramKey}">—</span>
+      <span class="score-badge" id="badge-${key}">—</span>
     </header>
-    <div class="progress" style="margin:8px 0"><div id="bar-${paramKey}" class="bar" style="width:0%"></div></div>
-    <div class="tiny" id="meta-${paramKey}">Compliance: —% • Index: — • Scale: —</div>
-    <div class="checks" id="checks-${paramKey}">
-      ${def.checks.map((c,idx)=>`
-        <label class="check">
-          <input type="checkbox" data-pillar="${pillarName}" data-param="${paramId}" data-weight="${c.w}" id="chk-${paramKey}-${idx}"/>
-          <div>
-            <div>${c.label}</div>
-            <div class="tiny">Weight: ${c.w}%</div>
-          </div>
-        </label>
-      `).join("")}
-    </div>
+    <div class="progress" style="margin:8px 0"><div id="bar-${key}" class="bar" style="width:0%"></div></div>
+    <div class="tiny" id="meta-${key}">Compliance: —% • Index: — • Scale: —</div>
+    <div class="checks" id="checks-${key}"></div>
   `;
-  // restore previous state
-  const saved = getSavedModuleState()[paramId] || [];
-  def.checks.forEach((_,i)=>{
-    const cb = wrap.querySelector(`#chk-${paramKey}-${i}`);
-    if(saved.includes(i)) cb.checked = true;
+  const area = wrap.querySelector(`#checks-${key}`);
+  const saved = getSaved()[pid] || {};
+  def.checks.forEach((ch,i)=>{
+    const cid = `${key}-${i}`;
+    const row = document.createElement("div"); row.className="row";
+    const weight = (typeof ch.w==="number") ? ch.w : 0;
+    const type = ch.type || "check";
+    let control = "";
+    if(type==="check"){
+      control = `<label class="row" style="gap:8px">
+        <input type="checkbox" data-type="check" data-pillar="${pillarName}" data-param="${pid}" data-index="${i}" />
+        <span>${ch.label}</span>
+      </label>`;
+    } else if(type==="scale5"){
+      const val = saved[i]?.v ?? 0;
+      control = `<div class="row" style="gap:8px">
+        <input type="range" min="0" max="5" step="0.5" value="${val}" data-type="scale5" data-pillar="${pillarName}" data-param="${pid}" data-index="${i}"/>
+        <span class="chip">0–5</span><span class="tiny">${ch.help||""}</span>
+      </div>`;
+    } else { // scale100
+      const val = saved[i]?.v ?? 0;
+      control = `<div class="row" style="gap:8px">
+        <input type="range" min="0" max="100" step="5" value="${val}" data-type="scale100" data-pillar="${pillarName}" data-param="${pid}" data-index="${i}"/>
+        <span class="chip">0–100%</span><span class="tiny">${ch.help||""}</span>
+      </div>`;
+    }
+    row.innerHTML = `
+      <div style="flex:1">${control}</div>
+      <span class="chip">w: ${weight}%</span>
+      <label class="na"><input type="checkbox" data-na="1" data-pillar="${pillarName}" data-param="${pid}" data-index="${i}"/> N/A</label>
+    `;
+    area.appendChild(row);
+
+    // restore saved state
+    const ctrl = row.querySelector(`[data-param="${pid}"][data-index="${i}"]:not([data-na])`);
+    if(saved[i]){
+      if(ctrl.dataset.type==="check") ctrl.checked = !!saved[i].v;
+      else ctrl.value = saved[i].v;
+      const na = row.querySelector(`[data-na="1"]`);
+      if(saved[i].na){ na.checked = true; ctrl.disabled = true; }
+    }
   });
   return wrap;
 }
-function attachChangeHandlers(){
-  formArea.querySelectorAll("input[type=checkbox]").forEach(cb=>{
-    cb.addEventListener("change", ()=>{
-      persistCheck(cb);
-      compute();
-    });
-  });
-}
 
-/* ==========================================================
-   STATE
-   ========================================================== */
-function getSavedModuleState(){
-  return JSON.parse(localStorage.getItem(STORAGE_KEYS[currentModule]) || "{}");
-}
-function persistCheck(cb){
-  const paramId = cb.dataset.param;
-  const def = MODEL.fullModel.parameters[paramId];
-  const state = getSavedModuleState();
-  state[paramId] = state[paramId] || [];
-  const idx = [...cb.parentElement.parentElement.querySelectorAll("input[type=checkbox]")].indexOf(cb);
-  // recompute current checked list for that parameter
-  const list = [];
-  def.checks.forEach((_,i)=>{
-    const node = cb.parentElement.parentElement.querySelector(`#chk-${b64(paramId)}-${i}`);
-    if(node && node.checked) list.push(i);
-  });
-  state[paramId] = list;
-  localStorage.setItem(STORAGE_KEYS[currentModule], JSON.stringify(state));
-}
-function saveAll(){
-  // already persisted on change; just notify
-  alert("Saved locally.");
-}
-function loadAll(){
-  render();
-  alert("Loaded from local storage (if present).");
-}
+/* ========================= STATE ========================= */
+function getSaved(){ return JSON.parse(localStorage.getItem(STORAGE_KEYS[currentModule]) || "{}"); }
+function setSaved(S){ localStorage.setItem(STORAGE_KEYS[currentModule], JSON.stringify(S)); }
+function saveAll(){ alert("Saved locally."); }
+function loadAll(){ render(); alert("Loaded (if previously saved)."); }
 function resetAll(){
   if(!confirm("Clear all selections for this module?")) return;
-  localStorage.removeItem(STORAGE_KEYS[currentModule]);
-  render();
-}
-function exportJSON(){
-  const payload = {
-    module: currentModule,
-    version: MODEL.version,
-    ts: new Date().toISOString(),
-    selections: getSavedModuleState(),
-    results: compute(true) // compute silently and return
-  };
-  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `oemm_${currentModule}_${Date.now()}.json`;
-  a.click(); URL.revokeObjectURL(a.href);
+  localStorage.removeItem(STORAGE_KEYS[currentModule]); render();
 }
 
-/* ==========================================================
-   COMPUTATION
-   ========================================================== */
+/* ========================= COMPUTE ========================= */
 function collectCompliance(){
-  // returns { paramId: {compliance:%, index, scale}, pillarName: ... }
-  const output = {};
-  const inputs = formArea.querySelectorAll("input[type=checkbox]");
-  const byParam = {};
-  inputs.forEach(cb=>{
-    const pid = cb.dataset.param;
-    const w = parseFloat(cb.dataset.weight);
-    if(!byParam[pid]) byParam[pid]=0;
-    if(cb.checked) byParam[pid]+=w;
+  const out = {};
+  const blocks = (currentModule==="core")
+    ? (()=>{ const map={}; MODEL.core24.forEach(pid=>{
+         const pillar = MODEL.fullModel.pillars.find(p=>p.parameters.includes(pid)).name;
+         (map[pillar]=map[pillar]||[]).push(pid);
+       }); return Object.entries(map).map(([name,params])=>({name,params})); })()
+    : MODEL.fullModel.pillars.map(p=>({name:p.name, params:p.parameters}));
+
+  const saved = getSaved();
+
+  // prepare from DOM & persist
+  document.querySelectorAll('[data-param][data-index]:not([data-na])').forEach(ctrl=>{
+    const pid = ctrl.dataset.param, idx = ctrl.dataset.index;
+    saved[pid] = saved[pid] || {};
+    const type = ctrl.dataset.type;
+    let v = 0;
+    if(type==="check") v = ctrl.checked ? 1 : 0;
+    else if(type==="scale5") v = parseFloat(ctrl.value||"0")/5;
+    else v = parseFloat(ctrl.value||"0")/100; // scale100
+    const naEl = ctrl.parentElement.parentElement.querySelector('[data-na="1"]');
+    const na = naEl && naEl.checked;
+    saved[pid][idx] = { v: (type==="check")? (ctrl.checked?1:0): (type==="scale5"? parseFloat(ctrl.value||"0"): parseFloat(ctrl.value||"0")), na };
   });
-  // ensure all params exist even if 0
-  const modelParams = (currentModule==="core" ? MODEL.core24.slice()
-      : MODEL.fullModel.pillars.flatMap(p=>p.parameters));
-  modelParams.forEach(pid=>{
-    const comp = Math.max(0, Math.min(100, byParam[pid] || 0));
-    const idx = comp; // compliance == index (0-100)
-    const scl = indexToScale(idx);
-    output[pid] = { compliance: comp, index: idx, scale: scl };
+  // persist now
+  setSaved(saved);
+
+  // compute per parameter
+  Object.keys(MODEL.fullModel.parameters).forEach(pid=>{
+    // skip if not rendered (e.g., full vs core)
+    if(!document.querySelector(`[id^="checks-${b64(pid)}"]`)) return;
+    const def = MODEL.fullModel.parameters[pid];
+    let num=0, den=0;
+    def.checks.forEach((ch,i)=>{
+      const rec = saved[pid]?.[i];
+      const na = rec?.na;
+      const w = (typeof ch.w==="number") ? ch.w : 0;
+      if(na) return; // exclude from denominator
+      let val = 0;
+      if(rec){
+        if(ch.type==="check") val = rec.v?1:0;
+        else if(ch.type==="scale5") val = (rec.v||0)/5;
+        else val = (rec.v||0)/100;
+      }
+      num += w * val;
+      den += w;
+    });
+    const comp = den>0 ? (num/den)*100 : 0;
+    out[pid] = { index: comp, scale: indexToScale(comp) };
   });
-  return output;
+
+  return { blocks, perParam: out };
 }
+
 function compute(silent=false){
-  const comp = collectCompliance();
+  const {blocks, perParam} = collectCompliance();
+
   // update per-parameter UI
   if(!silent){
-    Object.keys(comp).forEach(pid=>{
-      const metaId = "meta-"+b64(pid);
-      const barId  = "bar-"+b64(pid);
-      const badgeId= "badge-"+b64(pid);
-      const m = comp[pid];
-      const meta = document.getElementById(metaId);
-      const bar = document.getElementById(barId);
-      const badge = document.getElementById(badgeId);
-      if(meta){ meta.textContent = `Compliance: ${fmt(m.compliance,0)}% • Index: ${fmt(m.index,0)} • Scale: ${fmt(m.scale,1)}`; }
-      if(bar){ bar.style.width = `${Math.max(0,Math.min(100,m.index))}%`; }
+    Object.keys(perParam).forEach(pid=>{
+      const idx = perParam[pid].index, scl = perParam[pid].scale;
+      const key=b64(pid);
+      const meta = document.getElementById(`meta-${key}`);
+      const bar  = document.getElementById(`bar-${key}`);
+      const badge= document.getElementById(`badge-${key}`);
+      if(meta) meta.textContent = `Compliance: ${fmt(idx,0)}% • Index: ${fmt(idx,0)} • Scale: ${fmt(scl,1)}`;
+      if(bar)  bar.style.width = `${Math.max(0,Math.min(100,idx))}%`;
       if(badge){
-        badge.textContent = fmt(m.scale,1);
-        badge.className = "score-badge " + (m.scale>=4 ? "score-good" : m.scale>=3 ? "score-warn" : "score-bad");
+        badge.textContent = fmt(scl,1);
+        badge.className = "score-badge " + (scl>=4?"score-good":scl>=3?"score-warn":"score-bad");
       }
     });
   }
 
-  // pillar indices (average of parameter indices in pillar)
+  // pillar indices
   const pillarIdx = {};
-  const blocks = (currentModule==="core")
-    ? (()=>{ const map={}; MODEL.core24.forEach(pid=>{
-          const pillar = MODEL.fullModel.pillars.find(p=>p.parameters.includes(pid)).name;
-          if(!map[pillar]) map[pillar]=[]; map[pillar].push(pid);
-        }); return Object.entries(map).map(([name,params])=>({name,params})); })()
-    : MODEL.fullModel.pillars.map(p=>({name:p.name, params:p.parameters}));
-
   let sumW=0, sumWx=0;
   blocks.forEach(b=>{
-    const idxs = b.params.map(pid => comp[pid].index);
-    const valid = idxs.filter(v => v!=null && !isNaN(v));
-    const avg = valid.length ? valid.reduce((a,c)=>a+c,0)/valid.length : null;
+    const idxs = b.params
+      .filter(pid => perParam[pid]!=null)
+      .map(pid => perParam[pid].index);
+    const avg = idxs.length ? idxs.reduce((a,c)=>a+c,0)/idxs.length : null;
     pillarIdx[b.name] = avg;
-    if(avg!=null){
-      sumW += MODEL.weights[b.name];
-      sumWx += MODEL.weights[b.name]*avg;
-    }
+    if(avg!=null){ sumW += MODEL.weights[b.name]; sumWx += MODEL.weights[b.name]*avg; }
   });
 
   const overallIndexPre = sumW>0 ? (sumWx/sumW) : null;
   const overallScalePre = indexToScale(overallIndexPre);
 
   // gates
-  const gateResults = MODEL.gates.map(g=>{
-    const vals = g.params.map(pid => comp[pid]?.scale ?? null);
-    const missing = vals.some(v => v==null);
+  const gates = MODEL.gates.map(g=>{
+    const vals = g.params.map(pid => perParam[pid]?.scale ?? null);
+    const missing = vals.some(v=>v==null);
     let pass=false;
     if(!missing){
-      if(g.logical==="AND"){ pass = vals.every(v => v>=g.threshold); }
-      else { pass = vals.some(v => v>=g.threshold); }
+      pass = (g.logical==="AND") ? vals.every(v=>v>=g.threshold) : vals.some(v=>v>=g.threshold);
     }
-    return { id:g.id, label:g.label, vals, threshold:g.threshold, pass, missing };
+    return { id:g.id, label:g.label, pass, missing };
   });
-  const allPass = gateResults.every(g=>g.pass);
+  const allPass = gates.every(x=>x.pass);
 
-  // after gates (cap at 3 if any fail)
+  // after gates
   let afterGatesScale = overallScalePre;
-  if(afterGatesScale!=null && !allPass) afterGatesScale = Math.min(afterGatesScale, 3.0);
+  if(afterGatesScale!=null && !allPass) afterGatesScale = Math.min(afterGatesScale,3.0);
 
   // caps
-  const capDetails = MODEL.caps.map(c=>{
-    const vals = c.params.map(pid => comp[pid]?.scale ?? null);
+  const caps = MODEL.caps.map(c=>{
+    const vals = c.params.map(pid => perParam[pid]?.scale ?? null);
     let trigger=false;
     if(vals.every(v=>v!=null)){
       if(c.logic==="OR"){ trigger = (vals[0] < c.lt) || (vals[1] < c.lt); }
@@ -964,103 +974,89 @@ function compute(silent=false){
     }
     return { label:c.label, trigger, cap:c.cap };
   });
-
   let finalScale = afterGatesScale;
-  capDetails.forEach(c=>{ if(c.trigger) finalScale = Math.min(finalScale, c.cap); });
-  const finalIndex = finalScale==null ? null : (()=>{ // inverse of mapping for display bar
-    // approximate by piecewise inverse:
+  caps.forEach(c=>{ if(c.trigger) finalScale = Math.min(finalScale, c.cap); });
+  const finalIndex = (()=>{
+    if(finalScale==null) return null;
     if(finalScale<=2) return (finalScale-1)*25;
     if(finalScale<=3) return 25 + (finalScale-2)*25;
     if(finalScale<=4) return 50 + (finalScale-3)*30;
     return 80 + (finalScale-4)*20;
   })();
 
-  // update UI
+  // UI totals
   if(!silent){
     document.getElementById("overallIndex").textContent = fmt(finalIndex,1);
     document.getElementById("overallScale").textContent = fmt(finalScale,1);
     document.getElementById("overallBand").textContent = band(finalScale);
-    document.getElementById("gatesPassed").textContent = allPass ? "All" : `${gateResults.filter(x=>x.pass).length}/${MODEL.gates.length}`;
-
-    renderGateCaps(gateResults, capDetails);
+    document.getElementById("gatesPassed").textContent = allPass ? "All" : `${gates.filter(x=>x.pass).length}/${MODEL.gates.length}`;
+    renderGateCaps(gates,caps);
     renderPillars(pillarIdx);
   }
 
-  return {
-    module: currentModule,
-    pillarIndices: pillarIdx,
-    overallIndexPre, overallScalePre,
-    afterGatesScale, finalScale, finalIndex,
-    gates: gateResults, caps: capDetails
-  };
+  return { pillarIdx, overallIndexPre, overallScalePre, afterGatesScale, finalScale, finalIndex, gates, caps };
 }
-function renderGateCaps(gates, caps){
-  const box = document.getElementById("gateList");
-  box.innerHTML = "";
+
+function renderGateCaps(gates,caps){
+  const box = document.getElementById("gateList"); box.innerHTML="";
   gates.forEach(g=>{
-    const row = document.createElement("div"); row.className="pillar-card";
+    const row=document.createElement("div"); row.className="pillar-card";
     const state = g.missing ? "score-bad" : (g.pass ? "score-good" : "score-bad");
     row.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
-      <div>${g.label}</div>
-      <span class="score-badge ${state}">${g.missing?"Missing":(g.pass?"PASS":"FAIL")}</span>
-    </div>`;
+      <div>${g.label}</div><span class="score-badge ${state}">${g.missing?"Missing":"".concat(g.pass?"PASS":"FAIL")}</span></div>`;
     box.appendChild(row);
   });
-  const sep = document.createElement("div"); sep.className="tiny"; sep.style.marginTop="8px"; sep.textContent="Caps";
+  const sep=document.createElement("div"); sep.className="tiny"; sep.style.marginTop="8px"; sep.textContent="Caps";
   box.appendChild(sep);
   caps.forEach(c=>{
-    const row = document.createElement("div"); row.className="pillar-card";
+    const row=document.createElement("div"); row.className="pillar-card";
     row.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
-      <div>${c.label}</div>
-      <span class="score-badge ${c.trigger?"score-bad":"score-good"}">${c.trigger?"ACTIVE":"—"}</span>
-    </div>`;
+      <div>${c.label}</div><span class="score-badge ${c.trigger?"score-bad":"score-good"}">${c.trigger?"ACTIVE":"—"}</span></div>`;
     box.appendChild(row);
   });
 }
 function renderPillars(pillarIdx){
-  const cont = document.getElementById("pillarBreakdown");
-  cont.innerHTML = "";
+  const cont=document.getElementById("pillarBreakdown"); cont.innerHTML="";
   Object.keys(MODEL.weights).forEach(p=>{
-    const idx = pillarIdx[p];
-    const scl = indexToScale(idx);
-    const pct = idx==null?0:Math.max(0,Math.min(100,idx));
-    const state = scl==null ? "" : (scl>=4?"score-good":scl>=3?"score-warn":"score-bad");
-    const card = document.createElement("div"); card.className="pillar-card";
-    card.innerHTML = `
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div style="display:flex; gap:8px; align-items:baseline">
-          <strong>${p}</strong>
-          <span class="pill">Weight: ${MODEL.weights[p]}</span>
-        </div>
-        <span class="score-badge ${state}">${fmt(scl,1)}</span>
-      </div>
+    const idx=pillarIdx[p]; const scl=indexToScale(idx);
+    const pct=idx==null?0:Math.max(0,Math.min(100,idx));
+    const state = scl==null?"" : (scl>=4?"score-good":scl>=3?"score-warn":"score-bad");
+    const card=document.createElement("div"); card.className="pillar-card";
+    card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;gap:8px;align-items:baseline"><strong>${p}</strong><span class="pill">Weight: ${MODEL.weights[p]}</span></div>
+      <span class="score-badge ${state}">${fmt(scl,1)}</span></div>
       <div class="progress" style="margin-top:8px"><div class="bar" style="width:${pct}%"></div></div>
-      <div class="tiny">Index: ${fmt(idx,1)}</div>
-    `;
+      <div class="tiny">Index: ${fmt(idx,1)}</div>`;
     cont.appendChild(card);
   });
 }
 
-/* ==========================================================
-   EVENTS
-   ========================================================== */
+/* ========================= EVENTS ========================= */
+function attachHandlers(){
+  formArea.addEventListener("change", e=>{
+    const t=e.target;
+    if(t.matches('[data-na="1"]')){
+      const ctrl = t.closest(".row").querySelector('[data-param][data-index]:not([data-na])');
+      if(ctrl){ ctrl.disabled = t.checked; }
+    }
+    compute();
+  });
+}
 document.getElementById("btnCompute").addEventListener("click", ()=>compute());
 document.getElementById("btnSave").addEventListener("click", saveAll);
 document.getElementById("btnLoad").addEventListener("click", loadAll);
 document.getElementById("btnReset").addEventListener("click", resetAll);
-document.getElementById("btnExport").addEventListener("click", exportJSON);
-
-btnCore.addEventListener("click", ()=>{
-  currentModule="core";
-  btnCore.classList.add("active"); btnCore.setAttribute("aria-selected","true");
-  btnFull.classList.remove("active"); btnFull.setAttribute("aria-selected","false");
-  render();
+document.getElementById("btnExport").addEventListener("click", ()=>{
+  const payload = { module:currentModule, ts:new Date().toISOString(), selections:getSaved(), results:compute(true) };
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+  const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`oemm_${currentModule}_${Date.now()}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
 });
-btnFull.addEventListener("click", ()=>{
-  currentModule="full";
-  btnFull.classList.add("active"); btnFull.setAttribute("aria-selected","true");
-  btnCore.classList.remove("active"); btnCore.setAttribute("aria-selected","false");
-  render();
+document.getElementById("btnCore").addEventListener("click", ()=>{
+  currentModule="core"; btnCore.classList.add("active"); btnFull.classList.remove("active"); render();
+});
+document.getElementById("btnFull").addEventListener("click", ()=>{
+  currentModule="full"; btnFull.classList.add("active"); btnCore.classList.remove("active"); render();
 });
 
 /* init */
