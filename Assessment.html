@@ -16,10 +16,13 @@
   header{position:sticky;top:0;z-index:8;background:linear-gradient(180deg,rgba(14,17,30,.9),rgba(14,17,30,.6)),rgba(14,17,30,.6);
     backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
   .wrap{max-width:1200px;margin:0 auto;padding:18px 20px}
-  .brand{display:flex;gap:12px;align-items:center}
+  .brand{display:flex;gap:12px;align-items:center;justify-content:space-between}
+  .brand-left{display:flex;gap:12px;align-items:center}
   .logo{width:34px;height:34px;border-radius:10px;background:conic-gradient(from 180deg,var(--brand),var(--brand-2));box-shadow:0 0 0 3px #ffffff0a}
   h1{margin:0;font-size:20px}
   .sub{color:var(--muted);font-size:13px}
+  .help-btn{border:1px solid var(--line);background:var(--panel);color:#fff;padding:9px 12px;border-radius:10px;cursor:pointer;font-weight:700}
+  .help-btn:hover{background:#1a1f3e}
   main{max-width:1200px;margin:18px auto;padding:0 20px 80px}
   .card{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.03)}
   .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
@@ -51,11 +54,13 @@
   .score-bad{background:#311315;color:#ffa1a9;border-color:#6b262b}
   .progress{width:100%;height:10px;border-radius:999px;background:#0e1230;border:1px solid var(--line);overflow:hidden}
   .bar{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand-2));width:0%}
-  .checks{display:grid;gap:8px}
-  .row{display:flex;gap:8px;align-items:center}
+  .checks{display:grid;gap:10px}
+  .row{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+  .field{display:flex;flex-direction:column;gap:4px;min-width:280px;flex:1}
+  .field label{font-size:13px;color:#e6e9ff}
   .chip{padding:2px 8px;border-radius:999px;background:#223;color:#aee;border:1px solid #2b395a;font-size:12px}
   .tiny{font-size:12px;color:var(--muted)}
-  input[type="range"]{width:220px}
+  input[type="range"]{width:240px}
   .na{display:flex;align-items:center;gap:6px;font-size:12px;color:#9fb2ff}
   .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
   .kpi{border:1px solid var(--line);border-radius:14px;padding:14px;background:rgba(255,255,255,.02)}
@@ -64,9 +69,9 @@
   .deck{display:grid;gap:12px}
   /* modal */
   .overlay{position:fixed;inset:0;background:var(--overlay);display:none;z-index:20;align-items:center;justify-content:center;padding:20px}
-  .modal{max-width:720px;width:100%;background:#0f142b;border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 60px #0009}
+  .modal{max-width:820px;width:100%;background:#0f142b;border:1px solid var(--line);border-radius:14px;box-shadow:0 20px 60px #0009}
   .modal header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
-  .modal .content{padding:16px;max-height:70vh;overflow:auto}
+  .modal .content{padding:16px;max-height:72vh;overflow:auto}
   .x{cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:4px 8px;background:#1b2040}
   .bul{margin:8px 0 0 16px;color:#cfe}
   .bul li{margin:4px 0}
@@ -75,11 +80,14 @@
 <body>
 <header>
   <div class="wrap brand">
-    <div class="logo" aria-hidden="true"></div>
-    <div>
-      <h1>Outcome Engineering Maturity – Sequenced, Purposeful Auto-Scoring</h1>
-      <div class="sub">Checkbox + Scales with purpose • Tiers (low→high) • Icons: ★ popular, ⛓️ depends, ⓘ info</div>
+    <div class="brand-left">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Outcome Engineering Maturity – Sequenced, Purposeful Auto-Scoring</h1>
+        <div class="sub">Checkbox + Scales with purpose • Tiers (low→high) • Icons: ★ popular, ⛓️ depends, ⓘ info</div>
+      </div>
     </div>
+    <button id="btnHelp" class="help-btn" aria-label="Open help and legend">Help / Legend</button>
   </div>
 </header>
 
@@ -138,50 +146,49 @@
   </div>
 </div>
 
-<footer class="wrap muted" style="text-align:center;margin-top:30px">v3.0 — Sequenced tiers • Purposeful scales • Icons & popovers • LocalStorage only</footer>
+<footer class="wrap muted" style="text-align:center;margin-top:30px">v3.1 — Slider labels + universal ⓘ • Help/Legend modal • LocalStorage only</footer>
 
 <script>
-/* SCALE CATALOG — purpose + anchors */
+/* ==========================================================
+   SCALE CATALOG — purpose + anchors (incl. generic fallbacks)
+   ========================================================== */
 const SCALE_CATALOG = {
-  p95_lead_time: {
-    label:"P95 Lead Time", purpose:"Shorten idea→production to tighten feedback loops.",
-    anchors:["0 = ≥20 days","1 = ~15 days","2 = ~10 days","3 = ~5 days","4 = ~2 days","5 = ≤1 day"]
-  },
-  deploy_frequency: {
-    label:"Deployment Frequency", purpose:"Increase safe delivery cadence to reduce batch size.",
-    anchors:["0 = Monthly","1 = Bi-weekly","2 = Weekly","3 = 2–3×/week","4 = Daily","5 = Hourly"]
-  },
-  change_failure_rate: {
-    label:"Change Failure Rate", purpose:"Ship safely by reducing incidents per deployment.",
-    anchors:["0 = ≥40%","2 = ~25%","3 = ~15%","4 = ~8%","5 = ≤5% (↑ is better)"]
-  },
-  ci_feedback_time: {
-    label:"CI Feedback Time", purpose:"Tighten developer loop to enable small, frequent changes.",
-    anchors:["0 = ≥60m","1 = 45m","2 = 30m","3 = 20m","4 = 15m","5 = ≤10m"]
-  },
-  mttr_scale: {
-    label:"MTTR", purpose:"Recover fast to protect user outcomes & error budgets.",
-    anchors:["0 = ≥2 days","2 = ~8h","3 = ~2h","4 = ~45m","5 = ≤15m"]
-  },
-  slo_coverage_pct: {
-    label:"SLO Coverage %", purpose:"Ensure reliability is defined where it matters.",
-    anchors:["0–100% of services with SLOs"]
-  },
-  lineage_coverage_pct: {
-    label:"Outcome Lineage %", purpose:"Trace PR→Feature→Event→KPI to attribute impact.",
-    anchors:["0–100% merged PRs with lineage"]
-  },
-  eng_cust_hours: {
-    label:"Engineer–Customer Hours", purpose:"Bring engineers closer to users to reduce rework.",
-    anchors:["0 = 0h/qtr","1 = 1h","2 = 2h","3 = 4h","4 = 6h","5 = ≥8h per engineer/quarter"]
-  },
-  tagging_coverage_pct: {
-    label:"Tagging Coverage %", purpose:"Expose cost-to-serve for financial decisions.",
-    anchors:["0–100% resources correctly tagged"]
-  }
+  p95_lead_time:{label:"P95 Lead Time",purpose:"Shorten idea→production to tighten feedback loops.",anchors:["0 = ≥20 days","1 = ~15 days","2 = ~10 days","3 = ~5 days","4 = ~2 days","5 = ≤1 day"]},
+  deploy_frequency:{label:"Deployment Frequency",purpose:"Increase safe delivery cadence to reduce batch size.",anchors:["0 = Monthly","1 = Bi-weekly","2 = Weekly","3 = 2–3×/week","4 = Daily","5 = Hourly"]},
+  change_failure_rate:{label:"Change Failure Rate",purpose:"Ship safely by reducing incidents per deployment.",anchors:["0 = ≥40%","2 = ~25%","3 = ~15%","4 = ~8%","5 = ≤5% (↑ is better)"]},
+  ci_feedback_time:{label:"CI Feedback Time",purpose:"Tighten developer loop to enable small, frequent changes.",anchors:["0 = ≥60m","1 = 45m","2 = 30m","3 = 20m","4 = 15m","5 = ≤10m"]},
+  mttr_scale:{label:"MTTR",purpose:"Recover fast to protect user outcomes & error budgets.",anchors:["0 = ≥2 days","2 = ~8h","3 = ~2h","4 = ~45m","5 = ≤15m"]},
+  slo_coverage_pct:{label:"SLO Coverage %",purpose:"Ensure reliability is defined where it matters.",anchors:["0–100% of services with SLOs"]},
+  lineage_coverage_pct:{label:"Outcome Lineage %",purpose:"Trace PR→Feature→Event→KPI to attribute impact.",anchors:["0–100% merged PRs with lineage"]},
+  eng_cust_hours:{label:"Engineer–Customer Hours",purpose:"Bring engineers closer to users to reduce rework.",anchors:["0 = 0h/qtr","1 = 1h","2 = 2h","3 = 4h","4 = 6h","5 = ≥8h per engineer/quarter"]},
+  tagging_coverage_pct:{label:"Tagging Coverage %",purpose:"Expose cost-to-serve for financial decisions.",anchors:["0–100% resources correctly tagged"]},
+  /* GENERIC FALLBACKS */
+  generic_0_5:{label:"Maturity (0–5)",purpose:"Rate the maturity of this capability.",anchors:["0 = Not at all","1 = Ad-hoc","2 = Emerging","3 = Defined","4 = Managed","5 = Optimised"]},
+  generic_0_100:{label:"Coverage % (0–100)",purpose:"Estimate current coverage/completeness.",anchors:["0% = none → 100% = fully covered"]}
 };
 
-/* TIER / META — sequence, popularity, dependencies, purpose */
+/* ==========================================================
+   DEFAULT PURPOSE (if a parameter lacks detailed text)
+   ========================================================== */
+const DEFAULT_PURPOSE_BY_PREFIX = {
+  strat:"Align strategy to measurable outcomes and governance.",
+  cust:"Wire customer evidence and KPIs into daily work.",
+  prod:"De-risk bets via discovery, prioritisation and GTM readiness.",
+  arch:"Shape systems for safe change and extensibility.",
+  eng:"Automate build/test/deploy and enable paved paths.",
+  deliv:"Improve flow metrics and release safety.",
+  reliab:"Protect user outcomes with SLOs, incidents and budgets.",
+  sec:"Bake security, privacy and compliance into the lifecycle.",
+  docs:"Make decisions and knowledge discoverable and auditable.",
+  org:"Enable empowered, accountable, outcome-owning teams.",
+  econ:"Expose costs and link spend to value outcomes.",
+  data:"Ensure trustworthy data/ML with SLAs and oversight.",
+  xp:"Deliver fast, inclusive experiences with feedback loops."
+};
+
+/* ==========================================================
+   TIER / META — sequence, popularity, dependencies, purpose
+   ========================================================== */
 const PARAM_META = {
   /* Tier 1 – Foundations */
   "eng.test_strategy":{tier:1,popular:true,purpose:"Fast, trustworthy feedback at unit→e2e levels.",dependsOn:[]},
@@ -189,33 +196,28 @@ const PARAM_META = {
   "docs.code_api_docs":{tier:1,purpose:"Docs-as-code; discoverable & fresh.",dependsOn:[]},
   "org.role_triad":{tier:1,purpose:"Clear EM/PM/Design decision rights.",dependsOn:[]},
   "cust.kpi_literacy":{tier:1,purpose:"Teams read & act on KPIs; shared vocabulary.",dependsOn:[]},
-
   /* Tier 2 – Flow basics */
   "deliv.lead_time":{tier:2,popular:true,purpose:"Shorten change lead time; primary flow signal.",dependsOn:["eng.test_strategy","eng.code_review_gates","eng.dev_workflow"]},
   "deliv.flow_efficiency":{tier:2,purpose:"Visualise queues; reduce wait vs work.",dependsOn:["deliv.lead_time"]},
   "eng.dev_workflow":{tier:2,purpose:"Reproducible local/cloud dev; fast bootstraps.",dependsOn:[]},
   "eng.cicd":{tier:2,popular:true,purpose:"Automated build/test/deploy; ship often & safely.",dependsOn:["eng.test_strategy","eng.dev_workflow"]},
   "arch.modularity":{tier:2,purpose:"Right-sized modules/services to limit blast radius.",dependsOn:[]},
-
   /* Tier 3 – Release & reliability */
   "deliv.release_safety":{tier:3,popular:true,purpose:"Progressive delivery, flags, rollback.",dependsOn:["eng.cicd"]},
   "reliab.incident_mgmt":{tier:3,purpose:"Coordinated response; RCAs & drills.",dependsOn:["arch.obs_by_design"]},
   "reliab.mttr_budget":{tier:3,popular:true,purpose:"Error budgets policies + MTTR tracking.",dependsOn:["arch.obs_by_design","reliab.incident_mgmt"]},
   "arch.obs_by_design":{tier:3,popular:true,purpose:"Golden signals, tracing & runbooks.",dependsOn:[]},
-
   /* Tier 4 – Product outcome wiring */
   "cust.proximity":{tier:4,popular:true,purpose:"Engineers meet users; evidence flows in.",dependsOn:[]},
   "cust.outcome_trace":{tier:4,popular:true,purpose:"PR→Feature→Event→KPI lineage for attribution.",dependsOn:["data.data_sla_lineage"]},
   "reliab.slos_product":{tier:4,popular:true,purpose:"Product-relevant SLOs & budget policy.",dependsOn:["arch.obs_by_design"]},
   "prod.discovery":{tier:4,purpose:"Derisk bets via experiments & guardrails.",dependsOn:["cust.problem_framing"]},
   "cust.problem_framing":{tier:4,purpose:"Evidence-first problem statements.",dependsOn:[]},
-
   /* Tier 5 – Economics & data */
   "econ.cost_to_serve":{tier:5,popular:true,purpose:"Cost per request/segment drives choices.",dependsOn:["eng.iac_gitops","eng.cloud_enable"]},
   "econ.squad_budget":{tier:5,purpose:"Local budget ownership & reallocation.",dependsOn:["econ.cost_to_serve"]},
   "data.data_sla_lineage":{tier:5,purpose:"Data contracts, lineage & quality SLAs.",dependsOn:[]},
   "arch.api_product":{tier:5,purpose:"API as product: SLAs, adoption, analytics.",dependsOn:["arch.modularity"]},
-
   /* Tier 6 – Enterprise excellence */
   "prod.gtm_readiness":{tier:6,purpose:"Enablement, support & rollback plans.",dependsOn:["deliv.release_safety"]},
   "econ.finops":{tier:6,purpose:"Policy-driven cloud savings & forecasts.",dependsOn:["econ.cost_to_serve","eng.iac_gitops"]},
@@ -250,7 +252,9 @@ const PARAM_META = {
   "data.analytics_selfserve":{tier:6,purpose:"Speed to insight; self-serve.",dependsOn:["data.data_sla_lineage"]}
 };
 
-/* MODEL (weights, gates, caps, parameters) */
+/* ==========================================================
+   MODEL (weights, gates, caps, parameters) – same set as before
+   ========================================================== */
 const MODEL = {
   weights: {
     "Strategy & Executive Alignment": 8,
@@ -307,10 +311,10 @@ const MODEL = {
       { name:"Experience Quality & Market Readiness", parameters:["xp.perf_budgets_rum","xp.accessibility","xp.i18n_l10n","xp.support_integration"] }
     ],
     parameters: {
-      /* explicit mixed examples */
+      /* Detailed mixed examples (with explicit labels on sliders) */
       "deliv.lead_time": { label:"Lead time for change", checks:[
         {type:"check",  w:18, label:"DORA/VCS export available (90d)"},
-        {type:"scale5", w:22, label:"P95 lead time", scaleRef:"p95_lead_time", purpose:"Lower time ⇒ faster learning cycles."},
+        {type:"scale5", w:22, label:"P95 lead time (lower is better)", scaleRef:"p95_lead_time", purpose:"Lower time ⇒ faster learning cycles."},
         {type:"check",  w:14, label:"WIP limits enforced"},
         {type:"check",  w:12, label:"Blocker ageing alerts"},
         {type:"check",  w:10, label:"Small PR policy"},
@@ -326,14 +330,14 @@ const MODEL = {
         {type:"check",  w:10, label:"Flake tracking & quarantine"},
         {type:"check",  w:10, label:"Performance tests for critical paths"},
         {type:"check",  w:8,  label:"AI-assisted/mutation testing used"},
-        {type:"scale5", w:16, label:"Median CI feedback time", scaleRef:"ci_feedback_time", purpose:"Tight loop enables small batches."}
+        {type:"scale5", w:16, label:"Median CI feedback time (lower is better)", scaleRef:"ci_feedback_time", purpose:"Tight loop enables small batches."}
       ]},
       "reliab.mttr_budget": { label:"MTTR & error budgets", checks:[
         {type:"check",  w:16, label:"Error budgets defined per service"},
         {type:"check",  w:14, label:"Budget burn dashboard live"},
         {type:"check",  w:12, label:"Budget policy (throttle/gate) documented"},
         {type:"check",  w:14, label:"≥2 policy activations last quarter"},
-        {type:"scale5", w:22, label:"Incident MTTR", scaleRef:"mttr_scale", purpose:"Faster recovery protects outcomes."},
+        {type:"scale5", w:22, label:"Incident MTTR (lower is better)", scaleRef:"mttr_scale", purpose:"Faster recovery protects outcomes."},
         {type:"check",  w:8,  label:"Auto-page/auto-ticket wired"},
         {type:"check",  w:8,  label:"Budget breaches reviewed in planning"},
         {type:"check",  w:6,  label:"Incident playbooks link to budget view"}
@@ -345,10 +349,10 @@ const MODEL = {
         {type:"check",   w:12, label:"Customer impact quantified (rev at risk)"},
         {type:"check",   w:10, label:"Runbooks link from SLO alerts"},
         {type:"check",   w:10, label:"SLO reviews in PM & on-call rituals"},
-        {type:"scale100",w:24, label:"SLO coverage %", scaleRef:"slo_coverage_pct", purpose:"Wider coverage ⇒ reliability by design."}
+        {type:"scale100",w:24, label:"SLO coverage % (higher is better)", scaleRef:"slo_coverage_pct", purpose:"Wider coverage ⇒ reliability by design."}
       ]},
       "cust.proximity": { label:"Customer proximity", checks:[
-        {type:"scale5",  w:28, label:"Engineer–customer hours", scaleRef:"eng_cust_hours", purpose:"Direct exposure prevents rework."},
+        {type:"scale5",  w:28, label:"Engineer–customer hours (higher is better)", scaleRef:"eng_cust_hours", purpose:"Direct exposure prevents rework."},
         {type:"check",   w:16, label:"Engineers join discovery/shadow sessions"},
         {type:"check",   w:12, label:"Notes linked to backlog items"},
         {type:"check",   w:12, label:"Quarterly pipeline of sessions planned"},
@@ -363,7 +367,7 @@ const MODEL = {
         {type:"check",   w:12, label:"Flag/experiment ID linked to PR"},
         {type:"check",   w:12, label:"KPI chart linked in PR/ticket"},
         {type:"check",   w:12, label:"Automated lineage view exists"},
-        {type:"scale100",w:22, label:"Lineage coverage % (90d)", scaleRef:"lineage_coverage_pct", purpose:"Attribution coverage."},
+        {type:"scale100",w:22, label:"Lineage coverage % (higher is better)", scaleRef:"lineage_coverage_pct", purpose:"Attribution coverage."},
         {type:"check",   w:7,  label:"Attribution notes: expected vs actual delta"},
         {type:"check",   w:5,  label:"Event data quality checks & alerts"}
       ]},
@@ -374,8 +378,8 @@ const MODEL = {
         {type:"check",  w:12, label:"Feature flags supported"},
         {type:"check",  w:10, label:"Canary/blue-green available"},
         {type:"check",  w:10, label:"Automated rollback hook"},
-        {type:"scale5", w:12, label:"Deployment frequency", scaleRef:"deploy_frequency", purpose:"Smaller batches, lower risk."},
-        {type:"scale5", w:10, label:"Change failure rate (↓ better)", scaleRef:"change_failure_rate", purpose:"Safety of delivery."}
+        {type:"scale5", w:12, label:"Deployment frequency (higher is better)", scaleRef:"deploy_frequency", purpose:"Smaller batches, lower risk."},
+        {type:"scale5", w:10, label:"Change failure rate (lower is better)", scaleRef:"change_failure_rate", purpose:"Safety of delivery."}
       ]},
       "econ.cost_to_serve": { label:"Cost-to-serve visibility", checks:[
         {type:"check",   w:18, label:"Tagging standards implemented"},
@@ -384,11 +388,11 @@ const MODEL = {
         {type:"check",   w:12, label:"Trends vs SLO compliance visible"},
         {type:"check",   w:10, label:"Alerts on anomaly spikes"},
         {type:"check",   w:10, label:"Monthly review in squad & product forums"},
-        {type:"scale100",w:14, label:"Tagging coverage %", scaleRef:"tagging_coverage_pct", purpose:"Transparency of spend."},
+        {type:"scale100",w:14, label:"Tagging coverage % (higher is better)", scaleRef:"tagging_coverage_pct", purpose:"Transparency of spend."},
         {type:"check",   w:10, label:"Accuracy spot-checks performed"}
       ]},
 
-      /* remaining parameters (weights auto-profiled) */
+      /* Remaining parameters (weights auto-profiled; labels present for all) */
       "strat.okr_link": { label:"Strategy → OKR linkage", checks:[
         {label:"Strategy tree documented & versioned"},
         {label:"≥80% squads have OKRs with owners & dates"},
@@ -793,43 +797,55 @@ const MODEL = {
   }
 };
 
-/* auto-type/weight helpers */
-const TAPER8 = [20,15,15,15,10,10,10,5];
-const TAPER6 = [20,20,15,15,15,15];
+/* ---------- weight/profile + scale backfill so every ⓘ has content ---------- */
+const TAPER8=[20,15,15,15,10,10,10,5], TAPER6=[20,20,15,15,15,15];
 function patchModel(){
   const P = MODEL.fullModel.parameters;
+  // Backfill parameter purpose if absent
+  Object.keys(P).forEach(pid=>{
+    PARAM_META[pid] = PARAM_META[pid] || {};
+    if(!PARAM_META[pid].purpose){
+      const pref = pid.split('.')[0];
+      PARAM_META[pid].purpose = DEFAULT_PURPOSE_BY_PREFIX[pref] || "Purpose: see checks below.";
+    }
+  });
   for(const pid of Object.keys(P)){
     const def = P[pid];
     def.checks.forEach(ch=>{ if(!ch.type) ch.type="check"; });
     const hasW = def.checks.some(ch=> typeof ch.w==="number");
     if(!hasW){
-      const n=def.checks.length;
-      let prof = (n===8?TAPER8:(n===6?TAPER6:null));
+      const n=def.checks.length; let prof=(n===8?TAPER8:(n===6?TAPER6:null));
       if(!prof){
-        prof = Array.from({length:n},(_,i)=> Math.max(8, Math.round(100 * Math.pow(0.88,i))));
-        const s=prof.reduce((a,b)=>a+b,0);
-        prof = prof.map(x=> Math.round(100*x/s));
+        prof = Array.from({length:n},(_,i)=> Math.max(8, Math.round(100*Math.pow(0.88,i))));
+        const s=prof.reduce((a,b)=>a+b,0); prof=prof.map(x=>Math.round(100*x/s));
         const d=100-prof.reduce((a,b)=>a+b,0); if(d) prof[0]+=d;
       }
-      def.checks.forEach((ch,i)=> ch.w = prof[i] ?? Math.round(100/n));
+      def.checks.forEach((ch,i)=> ch.w = prof[i]);
     } else {
       const s = def.checks.reduce((a,ch)=>a+(ch.w||0),0);
       if(s>0) def.checks.forEach(ch=> ch.w = +(ch.w*100/s).toFixed(2));
     }
-    // Heuristics: convert some labels into scales if not explicit
+    // Heuristics: ensure sliders have a scale + purpose; checks stay boolean
     def.checks.forEach(ch=>{
       if(ch.type==="check"){
         const L=(ch.label||"").toLowerCase();
-        if(/coverage|%|adoption|frequency|rate/.test(L)) ch.type="scale5"; // fallback
-        if(/coverage %|slo coverage|lineage|tagging/.test(L)) ch.type="scale100";
-        if(/p95|median|mttr|lead time|time to|setup time/.test(L)) ch.type="scale5";
+        if(/coverage %|slo coverage|lineage|tagging/.test(L)){ ch.type="scale100"; }
+        else if(/coverage|%|adoption|frequency|rate|p95|median|mttr|lead time|time to|setup time/.test(L)){ ch.type="scale5"; }
+      }
+      if((ch.type==="scale5" || ch.type==="scale100") && !ch.scaleRef){
+        ch.scaleRef = (ch.type==="scale100") ? "generic_0_100" : "generic_0_5";
+      }
+      if((ch.type==="scale5" || ch.type==="scale100") && !ch.purpose){
+        const sc = SCALE_CATALOG[ch.scaleRef]; if(sc) ch.purpose = sc.purpose;
       }
     });
   }
 }
 patchModel();
 
-/* STATE & VIEW */
+/* ==========================================================
+   STATE & VIEW
+   ========================================================== */
 const STORAGE_KEYS = { core:"oemm_core24_seq", full:"oemm_full12_seq" };
 let currentModule="core";    // 'core' | 'full'
 let currentView="pillar";    // 'pillar' | 'tier'
@@ -856,7 +872,9 @@ function band(scale){
 function getSaved(){ return JSON.parse(localStorage.getItem(STORAGE_KEYS[currentModule]) || "{}"); }
 function setSaved(S){ localStorage.setItem(STORAGE_KEYS[currentModule], JSON.stringify(S)); }
 
-/* RENDER */
+/* ==========================================================
+   RENDER
+   ========================================================== */
 function render(){
   formArea.innerHTML="";
   if(currentView==="pillar") renderByPillar();
@@ -864,6 +882,7 @@ function render(){
   attachHandlers();
   compute();
 }
+
 function visibleParamIds(){
   const all = MODEL.fullModel.pillars.flatMap(p=>p.parameters);
   if(currentModule==="core"){
@@ -872,6 +891,7 @@ function visibleParamIds(){
   }
   return all;
 }
+
 function renderByPillar(){
   const vis = new Set(visibleParamIds());
   MODEL.fullModel.pillars.forEach(block=>{
@@ -893,6 +913,7 @@ function renderByPillar(){
     formArea.appendChild(card);
   });
 }
+
 function renderByTier(){
   const vis = new Set(visibleParamIds());
   const tiers = {};
@@ -921,6 +942,7 @@ function renderByTier(){
     formArea.appendChild(card);
   });
 }
+
 function renderParam(pillarName, pid, showPillarChip=false){
   const def = MODEL.fullModel.parameters[pid];
   const meta = PARAM_META[pid] || {};
@@ -952,28 +974,43 @@ function renderParam(pillarName, pid, showPillarChip=false){
     const row = document.createElement("div"); row.className="row";
     const type = ch.type || "check";
     const w = (typeof ch.w==="number")? ch.w : 0;
+
+    // accessible IDs
+    const inputId = `${key}-${i}`;
     let control="";
     if(type==="check"){
-      control = `<label class="row" style="gap:8px">
-        <input type="checkbox" data-type="check" data-param="${pid}" data-index="${i}" />
-        <span>${ch.label}</span>
-      </label>`;
+      control = `
+        <div class="field" style="min-width:320px">
+          <label for="${inputId}">${ch.label}</label>
+          <div class="row" style="align-items:center;gap:8px">
+            <input id="${inputId}" type="checkbox" data-type="check" data-param="${pid}" data-index="${i}" />
+            <span class="chip">Yes/No</span>
+          </div>
+        </div>`;
     } else if(type==="scale5"){
       const val = saved[i]?.v ?? 0;
-      control = `<div class="row" style="gap:8px;flex-wrap:wrap">
-        <input type="range" min="0" max="5" step="0.5" value="${val}" data-type="scale5" data-param="${pid}" data-index="${i}"/>
-        <span class="chip">0–5</span>
-        <button class="ico info" title="Scale info" data-scale="${ch.scaleRef||''}" data-scale-owner="${pid}" data-scale-idx="${i}">ⓘ</button>
-        <span class="tiny">${ch.purpose||""}</span>
-      </div>`;
+      control = `
+        <div class="field">
+          <label for="${inputId}">${ch.label}</label>
+          <div class="row" style="align-items:center;gap:8px">
+            <input id="${inputId}" type="range" min="0" max="5" step="0.5" value="${val}" data-type="scale5" data-param="${pid}" data-index="${i}" aria-describedby="${inputId}-desc"/>
+            <span class="chip">0–5</span>
+            <button class="ico info" title="Scale info" data-scale="${ch.scaleRef||''}" data-scale-owner="${pid}" data-scale-idx="${i}">ⓘ</button>
+          </div>
+          <div id="${inputId}-desc" class="tiny">${ch.purpose||""}</div>
+        </div>`;
     } else {
       const val = saved[i]?.v ?? 0;
-      control = `<div class="row" style="gap:8px;flex-wrap:wrap">
-        <input type="range" min="0" max="100" step="5" value="${val}" data-type="scale100" data-param="${pid}" data-index="${i}"/>
-        <span class="chip">0–100%</span>
-        <button class="ico info" title="Scale info" data-scale="${ch.scaleRef||''}" data-scale-owner="${pid}" data-scale-idx="${i}">ⓘ</button>
-        <span class="tiny">${ch.purpose||""}</span>
-      </div>`;
+      control = `
+        <div class="field">
+          <label for="${inputId}">${ch.label}</label>
+          <div class="row" style="align-items:center;gap:8px">
+            <input id="${inputId}" type="range" min="0" max="100" step="5" value="${val}" data-type="scale100" data-param="${pid}" data-index="${i}" aria-describedby="${inputId}-desc"/>
+            <span class="chip">0–100%</span>
+            <button class="ico info" title="Scale info" data-scale="${ch.scaleRef||''}" data-scale-owner="${pid}" data-scale-idx="${i}">ⓘ</button>
+          </div>
+          <div id="${inputId}-desc" class="tiny">${ch.purpose||""}</div>
+        </div>`;
     }
     row.innerHTML = `
       <div style="flex:1">${control}</div>
@@ -982,23 +1019,27 @@ function renderParam(pillarName, pid, showPillarChip=false){
     `;
     area.appendChild(row);
 
-    const ctrl = row.querySelector(`[data-param="${pid}"][data-index="${i}"]:not([data-na])`);
+    // restore saved
+    const ctrl = row.querySelector(`#${CSS.escape(inputId)}`);
     if(saved[i]){
-      if(ctrl.dataset.type==="check") ctrl.checked = !!saved[i].v;
-      else ctrl.value = saved[i].v;
+      if((ctrl?.dataset.type)==="check") ctrl.checked = !!saved[i].v;
+      else if(ctrl) ctrl.value = saved[i].v;
       const na = row.querySelector(`[data-na="1"]`);
-      if(saved[i].na){ na.checked = true; ctrl.disabled = true; }
+      if(saved[i].na){ na.checked = true; if(ctrl) ctrl.disabled = true; }
     }
   });
   return wrap;
 }
 
-/* MODAL */
+/* ==========================================================
+   POPUPS (Info / Dependencies / Global Help)
+   ========================================================== */
 const overlay = document.getElementById("overlay");
 const modalTitle = document.getElementById("modalTitle");
 const modalContent = document.getElementById("modalContent");
 document.getElementById("modalClose").addEventListener("click", ()=> overlay.style.display="none");
 overlay.addEventListener("click", e=>{ if(e.target===overlay) overlay.style.display="none"; });
+
 function openModal(title, html){
   modalTitle.textContent = title;
   modalContent.innerHTML = html;
@@ -1031,7 +1072,26 @@ function paramInfoHTML(pid){
   `;
 }
 
-/* EVENTS / PERSIST */
+document.getElementById("btnHelp").addEventListener("click", ()=>{
+  openModal("Help / Legend", `
+    <p>This page lets you assess maturity via <b>checkboxes</b> and <b>scales</b> with clear <b>purpose</b> and <b>anchors</b>.</p>
+    <ul class="bul">
+      <li><b>Modules:</b> <em>Core 24</em> (fast baseline) vs <em>Full 12 Pillars</em> (comprehensive).</li>
+      <li><b>Views:</b> <em>By Pillar</em> groups by capability; <em>By Tier</em> shows the recommended <u>sequence of adoption</u> (low→high complexity). <b>Tier ≠ Score level</b>.</li>
+      <li><b>Icons:</b> ★ popular high-ROI items; ⛓️ shows <em>dependencies</em>; ⓘ opens <em>details</em> (purpose, anchors, deps).</li>
+      <li><b>Sliders:</b> Each slider now has a label. Click the ⓘ beside the slider for a plain-English purpose and anchor definitions.</li>
+      <li><b>N/A:</b> If a sub-item doesn’t apply, tick <em>N/A</em> to exclude it from weighting.</li>
+      <li><b>Weighting:</b> Each sub-item shows its weight (w:%). Parameter compliance is the weighted average.</li>
+      <li><b>Index → Scale:</b> Parameter/pillar indices (0–100) map to scale (1–5): 0–25→1..2, 25–50→2..3, 50–80→3..4, 80–100→4..5.</li>
+      <li><b>Gates & Caps:</b> Failing key gates caps overall at ≤3. Additional caps apply (e.g., low proximity → cap 2.9).</li>
+      <li><b>Save/Load/Export:</b> Local only (browser). Use <em>Export JSON</em> to share results.</li>
+    </ul>
+  `);
+});
+
+/* ==========================================================
+   EVENTS / PERSIST
+   ========================================================== */
 function attachHandlers(){
   formArea.addEventListener("click", e=>{
     const t=e.target;
@@ -1067,6 +1127,7 @@ function attachHandlers(){
     compute();
   });
 }
+
 function saveAll(){ alert("Saved locally."); }
 function loadAll(){ render(); alert("Loaded (if previously saved)."); }
 function resetAll(){ if(!confirm("Clear all selections for this module?")) return; localStorage.removeItem(STORAGE_KEYS[currentModule]); render(); }
@@ -1106,7 +1167,9 @@ document.getElementById("btnViewTier").addEventListener("click", ()=>{
   render();
 });
 
-/* COMPUTATION */
+/* ==========================================================
+   COMPUTATION
+   ========================================================== */
 function collectCompliance(){
   const out = {};
   const saved = getSaved();
@@ -1142,6 +1205,7 @@ function collectCompliance(){
   });
   return out;
 }
+
 function compute(silent=false){
   const comp = collectCompliance();
   if(!silent){
@@ -1159,6 +1223,7 @@ function compute(silent=false){
       }
     });
   }
+  // pillar aggregation
   const byPillar = {};
   MODEL.fullModel.pillars.forEach(p=>{
     const ids = p.parameters.filter(id => visibleParamIds().includes(id));
@@ -1174,14 +1239,17 @@ function compute(silent=false){
   });
   const overallIndexPre = sumW? (sumWx/sumW) : null;
   const overallScalePre = indexToScale(overallIndexPre);
+  // gates
   const gates = MODEL.gates.map(g=>{
     const vals = g.params.map(pid => comp[pid]?.scale ?? null);
     const pass = vals.every(v=>v!=null) && ((g.logical==="AND") ? vals.every(v=>v>=g.threshold) : vals.some(v=>v>=g.threshold));
     return { id:g.id, label:g.label, pass };
   });
   const allPass = gates.every(x=>x.pass);
+  // gates cap at 3 if fail
   let afterGatesScale = overallScalePre;
   if(afterGatesScale!=null && !allPass) afterGatesScale = Math.min(afterGatesScale,3.0);
+  // caps
   const caps = MODEL.caps.map(c=>{
     const vals = c.params.map(pid => comp[pid]?.scale ?? null);
     let trigger=false;
@@ -1210,6 +1278,7 @@ function compute(silent=false){
   }
   return { perParam: comp, byPillar, overallIndexPre, overallScalePre, afterGatesScale, finalScale, finalIndex, gates, caps };
 }
+
 function renderGateCaps(gates,caps){
   const box=document.getElementById("gateList"); box.innerHTML="";
   gates.forEach(g=>{
@@ -1228,6 +1297,7 @@ function renderGateCaps(gates,caps){
     box.appendChild(row);
   });
 }
+
 function renderBreakdown(byPillar){
   const cont=document.getElementById("pillarBreakdown"); cont.innerHTML="";
   Object.keys(MODEL.weights).forEach(p=>{
