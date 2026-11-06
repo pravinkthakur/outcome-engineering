@@ -1,0 +1,47 @@
+name: Home CI - Outcome Engineering
+
+# No production publishing from branches. Runner must be registered before merge.
+on:
+  push:
+    branches: ['**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: home-ci-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    if: github.actor == 'pravinkthakur'
+    runs-on: [self-hosted, Linux, X64, moderneer-outcome]
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+
+      - name: Run checks under machine-wide resource lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$HOME/moderneer-ci"
+          exec 9>"$HOME/moderneer-ci/heavy-ci.lock"
+          flock -w 7200 9
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          class Check(HTMLParser): pass
+          files = sorted(Path('.').glob('*.html'))
+          assert files, 'No HTML source files found'
+          for file in files:
+              body = file.read_text(encoding='utf-8-sig')
+              assert '<!doctype html' in body.lower(), f'{file}: missing HTML doctype'
+              parser = Check()
+              parser.feed(body)
+              parser.close()
+              print(f'HTML parsed: {file}')
+          PY
+          git diff --check
